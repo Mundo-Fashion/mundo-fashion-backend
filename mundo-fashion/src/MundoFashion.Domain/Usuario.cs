@@ -1,4 +1,5 @@
 ﻿using MundoFashion.Core;
+using MundoFashion.Core.Constants;
 using MundoFashion.Core.Interfaces;
 using System.Collections.Generic;
 
@@ -26,12 +27,15 @@ namespace MundoFashion.Domain
         public void AdicionarEmpresa(Empresa empresa)
         {
             empresa.AssociarUsuario(Id);
+            AlterarRole(Roles.CLIENTE_FORNECEDOR);
             _empresas.Add(empresa);
         }
 
-        public void setRole(string newRole)
+        public void AlterarRole(string novaRole)
         {
-            Role = newRole;
+            if (Role.Equals(novaRole)) return;
+
+            Role = novaRole;
         }
     }
 }
