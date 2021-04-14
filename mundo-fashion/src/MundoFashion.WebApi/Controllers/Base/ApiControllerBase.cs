@@ -2,8 +2,10 @@
 using Microsoft.AspNetCore.Mvc;
 using MundoFashion.Core.Notifications;
 using MundoFashion.Core.Notifications.Handlers;
+using System;
 using System.Linq;
 using System.Net;
+using System.Security.Claims;
 
 namespace MundoFashion.WebApi.Controllers.Base
 {
@@ -11,6 +13,7 @@ namespace MundoFashion.WebApi.Controllers.Base
     {
         private readonly NotificacaoHandler _notificacoes;
 
+        protected Guid UsuarioId => Guid.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
         protected ApiControllerBase(INotificationHandler<Notificacao> notificacoes)
         {
             _notificacoes = (NotificacaoHandler)notificacoes;

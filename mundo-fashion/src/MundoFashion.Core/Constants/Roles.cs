@@ -4,6 +4,6 @@
     {
         public const string CLIENTE = "cliente";
         public const string ADMINISTRADOR = "admin";
-        public const string CLIENTE_FORNECEDOR = "cliente-fornecedor";
+        public const string CLIENTE_PRESTADOR = "cliente-prestador";
     }
 }

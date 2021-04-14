@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using MundoFashion.Domain;
+using MundoFashion.Domain.Servicos;
 
 namespace MundoFashion.Infrastructure.Data.Mappings
 {
@@ -12,6 +13,10 @@ namespace MundoFashion.Infrastructure.Data.Mappings
             builder.HasOne(e => e.Usuario)
                 .WithMany(u => u.Empresas)
                 .HasForeignKey(e => e.UsuarioId);
+
+            builder.HasOne(e => e.Servico)
+                .WithOne(s => s.Empresa)
+                .HasForeignKey<ServicoEstampa>(x => x.EmpresaId);
 
             builder.ToTable("Empresas");
         }

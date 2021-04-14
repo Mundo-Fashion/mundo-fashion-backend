@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using MundoFashion.Domain;
 using MundoFashion.Domain.Repositories;
+using MundoFashion.Domain.Servicos;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
@@ -32,9 +33,10 @@ namespace MundoFashion.Infrastructure.Data.Repositories
 
         public async Task<Usuario> ObterUsuarioPorId(Guid id)
         {
-            return await _context.Usuarios.SingleOrDefaultAsync(u => u.Id == id);
+            return await _context.Usuarios
+                .Include(u => u.Servico).SingleOrDefaultAsync(u => u.Id == id);
         }
-        public async Task<Usuario> ObterUsuarioPorIdComEmpresas(Guid id)
+        public async Task<Usuario> ObterUsuarioPorIdComEmpresaes(Guid id)
         {
             return await _context.Usuarios.Include(u => u.Empresas).SingleOrDefaultAsync(u => u.Id == id);
         }
@@ -49,25 +51,47 @@ namespace MundoFashion.Infrastructure.Data.Repositories
             return await _context.Usuarios.Where(u => u.Username.Equals(username) && u.Password.Equals(senha)).SingleOrDefaultAsync();
         }
 
-        public void AdicionarEmpresa(Empresa empresa)
+        public void AdicionarEmpresa(Empresa Empresa)
         {
-            _context.Empresas.Add(empresa);
+            _context.Empresas.Add(Empresa);
         }
 
-        public void RemoverEmpresa(Empresa empresa)
+        public void RemoverEmpresa(Empresa Empresa)
         {
-            _context.Empresas.Remove(empresa);
+            _context.Empresas.Remove(Empresa);
         }
 
-        public void AtualizarEmpresa(Empresa empresa)
+        public void AtualizarEmpresa(Empresa Empresa)
         {
-            _context.Empresas.Update(empresa);
+            _context.Empresas.Update(Empresa);
         }
 
         public async Task<Empresa> ObterEmpresaPorId(Guid id)
         {
-            return await _context.Empresas.SingleOrDefaultAsync(e => e.Id == id);
+            return await _context.Empresas
+                .Include(e => e.Servico).SingleOrDefaultAsync(e => e.Id == id);
         }
+
+        public void AdicionarServico(ServicoEstampa servico)
+        {
+            _context.Servicos.Add(servico);
+        }
+
+        public void AtualizarServico(ServicoEstampa servico)
+        {
+            _context.Servicos.Update(servico);
+        }
+
+        public async Task<ServicoEstampa> ObterServico(Guid id)
+        {
+            return await _context.Servicos.SingleOrDefaultAsync(s => s.Id == id);
+        }
+
+        public void RemoverServico(ServicoEstampa servico)
+        {
+            _context.Servicos.Remove(servico);
+        }
+
 
         public async Task<bool> Commit()
         {

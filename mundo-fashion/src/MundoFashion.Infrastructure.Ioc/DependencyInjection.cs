@@ -10,6 +10,7 @@ using MundoFashion.Core.Notifications.Handlers;
 using MundoFashion.Domain.Repositories;
 using MundoFashion.Infrastructure.Data;
 using MundoFashion.Infrastructure.Data.Repositories;
+using System;
 using System.Reflection;
 using System.Text;
 
@@ -20,16 +21,23 @@ namespace MundoFashion.Infrastructure.Ioc
         public static void Resolve(IServiceCollection services, Assembly aplicacaoAssembly, IConfiguration configuration)
         {
             AdicionarNotificador(services);
-            AdicionarDatabase(services);
+            AdicionarDatabase(services, configuration);
             AdicionarMediatR(services, aplicacaoAssembly);
             AdicionarAutenticacaoJwt(services, configuration);
             AdicionarServices(services);
             AdicionarRepositories(services);
+            AdicionarAutoMapper(services, aplicacaoAssembly);
+        }
+
+        private static void AdicionarAutoMapper(IServiceCollection services, Assembly aplicacaoAssembly)
+        {
+            services.AddAutoMapper(new Assembly[] { aplicacaoAssembly }, serviceLifetime: ServiceLifetime.Singleton);
         }
 
         private static void AdicionarRepositories(IServiceCollection services)
         {
             services.AddScoped<IUsuarioRepository, UsuarioRepository>();
+            services.AddScoped<IEmpresaRepository, EmpresaRepository>();
         }
 
         private static void AdicionarServices(IServiceCollection services)
@@ -43,9 +51,9 @@ namespace MundoFashion.Infrastructure.Ioc
             services.AddMediatR(aplicacaoAssembly);
         }
 
-        private static void AdicionarDatabase(IServiceCollection services)
+        private static void AdicionarDatabase(IServiceCollection services, IConfiguration configuration)
         {
-            services.AddDbContext<MundoFashionContext>(options => options.UseInMemoryDatabase("inmemory-database"));
+            services.AddDbContext<MundoFashionContext>(options => options.UseNpgsql(configuration.GetConnectionString("DefaultConnection")));
 
         }
 
