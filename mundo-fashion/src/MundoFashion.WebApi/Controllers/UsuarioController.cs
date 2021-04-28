@@ -33,7 +33,9 @@ namespace MundoFashion.WebApi.Controllers
         [Route("criar-usuario")]
         public async Task<ActionResult<string>> CriarUsuario(UsuarioModel usuario)
         {
-            await _usuarioServices.CriarUsuario(usuario.Username, usuario.Password);
+            await _usuarioServices.CriarUsuario(usuario.Username, usuario.Password)
+                                  .ConfigureAwait(false);
+
             return RespostaCustomizada("Usuário criado");
         }
 
@@ -42,7 +44,9 @@ namespace MundoFashion.WebApi.Controllers
         [Authorize(Roles = Roles.CLIENTE)]
         public async Task<ActionResult<string>> CriarEmpresa(EmpresaModel empresa)
         {
-            await _usuarioServices.CriarEmpresa(UsuarioId, new Empresa(empresa.Nome, empresa.Cnpj));
+            await _usuarioServices.CriarEmpresa(UsuarioId, new Empresa(empresa.Nome, empresa.Cnpj))
+                                  .ConfigureAwait(false); 
+
             return RespostaCustomizada($"Empresa '{empresa.Nome}' criada.");
         }
 
@@ -52,7 +56,9 @@ namespace MundoFashion.WebApi.Controllers
         {
             ServicoEstampa novoServico = _mapper.Map<ServicoEstampa>(servico);
 
-            await _usuarioServices.CriarServicoUsuario(UsuarioId, novoServico);
+            await _usuarioServices.CriarServicoUsuario(UsuarioId, novoServico)
+                                  .ConfigureAwait(false);
+
             return RespostaCustomizada("Serviço criado.");
         }
 
@@ -61,7 +67,7 @@ namespace MundoFashion.WebApi.Controllers
         [Authorize]
         public async Task<ActionResult<UsuarioModel>> ObterUsuario(Guid id)
         {
-            return _mapper.Map<UsuarioModel>(await _usuarioRepository.ObterUsuarioPorId(id));
+            return _mapper.Map<UsuarioModel>(await _usuarioRepository.ObterUsuarioPorId(id).ConfigureAwait(false));
         }
 
         [HttpPut]
@@ -71,7 +77,8 @@ namespace MundoFashion.WebApi.Controllers
         {
             ServicoEstampa servicoAtualizado = _mapper.Map<ServicoEstampa>(servico);
 
-            await _usuarioServices.AtualizarServicoUsuario(UsuarioId, servicoAtualizado);
+            await _usuarioServices.AtualizarServicoUsuario(UsuarioId, servicoAtualizado)
+                                  .ConfigureAwait(false);
 
             return RespostaCustomizada("Serviço atualizado com sucesso.");
         }
@@ -81,7 +88,8 @@ namespace MundoFashion.WebApi.Controllers
         [Authorize]
         public async Task<ActionResult<string>> RemoverServicoUsuario(Guid usuarioId)
         {
-            await _usuarioServices.RemoverServicoUsuario(usuarioId);
+            await _usuarioServices.RemoverServicoUsuario(usuarioId)
+                                  .ConfigureAwait(false);
 
             return RespostaCustomizada("Serviço removido com sucesso.");
         }

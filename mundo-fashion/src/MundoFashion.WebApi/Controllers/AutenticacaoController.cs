@@ -23,7 +23,7 @@ namespace MundoFashion.WebApi.Controllers
         [Route("logar")]
         public async Task<ActionResult<TokenDto>> Logar(string username, string senha)
         {
-            return RespostaCustomizada(await _autenticacaoServices.Logar(username, senha));
+            return RespostaCustomizada(await _autenticacaoServices.Logar(username, senha).ConfigureAwait(false));
         }
     }
 }
