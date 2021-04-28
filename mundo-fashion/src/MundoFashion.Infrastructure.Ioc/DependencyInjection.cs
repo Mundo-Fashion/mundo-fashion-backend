@@ -8,6 +8,7 @@ using MundoFashion.Application.Services;
 using MundoFashion.Core.Notifications;
 using MundoFashion.Core.Notifications.Handlers;
 using MundoFashion.Domain.Repositories;
+using MundoFashion.Infrastructure.Amazon.S3;
 using MundoFashion.Infrastructure.Data;
 using MundoFashion.Infrastructure.Data.Repositories;
 using System;
@@ -27,6 +28,12 @@ namespace MundoFashion.Infrastructure.Ioc
             AdicionarServices(services);
             AdicionarRepositories(services);
             AdicionarAutoMapper(services, aplicacaoAssembly);
+            AdicionarAmazonServices(services);
+        }
+
+        private static void AdicionarAmazonServices(IServiceCollection services)
+        {
+            services.AddScoped<FileUploader>();
         }
 
         private static void AdicionarAutoMapper(IServiceCollection services, Assembly aplicacaoAssembly)
