@@ -11,7 +11,6 @@ using MundoFashion.Domain.Repositories;
 using MundoFashion.Infrastructure.Amazon.S3;
 using MundoFashion.Infrastructure.Data;
 using MundoFashion.Infrastructure.Data.Repositories;
-using System;
 using System.Reflection;
 using System.Text;
 
@@ -45,12 +44,14 @@ namespace MundoFashion.Infrastructure.Ioc
         {
             services.AddScoped<IUsuarioRepository, UsuarioRepository>();
             services.AddScoped<IEmpresaRepository, EmpresaRepository>();
+            services.AddScoped<ISolicitacaoRepository, SolicitacaoRepository>();
         }
 
         private static void AdicionarServices(IServiceCollection services)
         {
             services.AddScoped<UsuarioServices>();
             services.AddScoped<AutenticacaoServices>();
+            services.AddScoped<SolicitacaoServices>();
         }
 
         private static void AdicionarMediatR(IServiceCollection services, Assembly aplicacaoAssembly)

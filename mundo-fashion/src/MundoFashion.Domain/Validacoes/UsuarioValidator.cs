@@ -6,7 +6,11 @@ namespace MundoFashion.Domain.Validacoes
     {
         public UsuarioValidator()
         {
-            RuleFor(u => u.Username)
+            RuleFor(u => u.Email)
+                .NotEmpty()
+                .EmailAddress();
+
+            RuleFor(u => u.Nome)
                 .NotEmpty();
 
             RuleFor(u => u.Password)

@@ -4,27 +4,37 @@ using MundoFashion.Core.Interfaces;
 using MundoFashion.Domain.Servicos;
 using System;
 using System.Collections.Generic;
-using System.Text.Json;
 
 namespace MundoFashion.Domain
 {
     public class Usuario : Entity, IAggregateRoot
     {
         private readonly List<Empresa> _empresas;
+        private readonly List<Solicitacao> _solicitacoes;
 
-        public string Username { get; private set; }
+        public string Nome { get; private set; }
+        public string Email { get; private set; }
         public string Password { get; private set; }
         public string Role { get; private set; }
         public string Cpf { get; private set; }
         public IReadOnlyCollection<Empresa> Empresas => _empresas.AsReadOnly();
         public ServicoEstampa Servico { get; private set; }
         public Guid ServicoId { get; private set; }
-        public Usuario(string username, string password, string role)
+        public IReadOnlyCollection<Solicitacao> Solicitacoes => _solicitacoes.AsReadOnly();
+        public Usuario(string nome, string email, string password, string role)
         {
-            Username = username;
+            Nome = nome;
+            Email = email;
             Password = password;
             Role = role;
             _empresas = new List<Empresa>();
+            _solicitacoes = new List<Solicitacao>();
+        }
+
+        public void AdicionarSolicitacao(Solicitacao solicitacao)
+        {
+            solicitacao.AssociarUsuario(Id);
+            _solicitacoes.Add(solicitacao);
         }
 
         public void SetarCpf(string cpf)
@@ -62,13 +72,18 @@ namespace MundoFashion.Domain
                 Role = novaRole;
         }
 
-        public void RemoverServico()
+        public void InativarServico()
         {
             if (PossuiServico())
-                ServicoId = Guid.Empty;
+                Servico.Inativate();
         }
 
         public bool PossuiServico()
             => !ServicoId.Equals(Guid.Empty);
+
+        public void AtualizarSolicitacao(Solicitacao solicitacao)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

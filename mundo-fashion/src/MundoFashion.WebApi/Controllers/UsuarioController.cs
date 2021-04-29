@@ -17,6 +17,7 @@ namespace MundoFashion.WebApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class UsuarioController : ApiControllerBase
     {
         private readonly UsuarioServices _usuarioServices;
@@ -31,9 +32,10 @@ namespace MundoFashion.WebApi.Controllers
 
         [HttpPost]
         [Route("criar-usuario")]
+        [AllowAnonymous]
         public async Task<ActionResult<string>> CriarUsuario(UsuarioModel usuario)
         {
-            await _usuarioServices.CriarUsuario(usuario.Username, usuario.Password)
+            await _usuarioServices.CriarUsuario(usuario.Nome, usuario.Email, usuario.Password)
                                   .ConfigureAwait(false);
 
             return RespostaCustomizada("Usuário criado");
@@ -52,7 +54,8 @@ namespace MundoFashion.WebApi.Controllers
 
         [HttpPost]
         [Route("criar-servico-usuario")]
-        public async Task<ActionResult<string>> CriarServicoPrestador(ServicoEstampaModel servico)
+        [AllowAnonymous]
+        public async Task<ActionResult<string>> CriarServicoUsuario(ServicoEstampaModel servico)
         {
             ServicoEstampa novoServico = _mapper.Map<ServicoEstampa>(servico);
 
@@ -64,7 +67,6 @@ namespace MundoFashion.WebApi.Controllers
 
         [HttpGet]
         [Route("obter-usuario/{id:guid}")]
-        [Authorize]
         public async Task<ActionResult<UsuarioModel>> ObterUsuario(Guid id)
         {
             return _mapper.Map<UsuarioModel>(await _usuarioRepository.ObterUsuarioPorId(id).ConfigureAwait(false));
@@ -84,14 +86,39 @@ namespace MundoFashion.WebApi.Controllers
         }
 
         [HttpDelete]
-        [Route("remover-servico-usuario/{usuarioId:guid}")]
-        [Authorize]
-        public async Task<ActionResult<string>> RemoverServicoUsuario(Guid usuarioId)
+        [Route("inativar-servico-usuario/{usuarioId:guid}")]
+        public async Task<ActionResult<string>> InativarServicoUsuario(Guid usuarioId)
         {
-            await _usuarioServices.RemoverServicoUsuario(usuarioId)
+            await _usuarioServices.InativarServicoUsuario(usuarioId)
                                   .ConfigureAwait(false);
 
             return RespostaCustomizada("Serviço removido com sucesso.");
         }
+
+        [HttpPost]
+        [Route("criar-solicitacao-usuario")]
+        public async Task<ActionResult<string>> CriarSolicitacaoUsuario(SolicitacaoModel solicitacao)
+        {
+            Solicitacao novaSolicitacao = _mapper.Map<Solicitacao>(solicitacao);
+
+            await _usuarioServices.AdicionarSolicitacaoUsuario(UsuarioId, novaSolicitacao)
+                                  .ConfigureAwait(false);
+
+            return RespostaCustomizada("Solicitação criada com sucesso.");
+        }
+
+
+        //[HttpPut]
+        //[Route("atualizar-solicitacao-usuario/{solicitacaoId:guid}")]
+        //[Authorize]
+        //public async Task<ActionResult<string>> AtualizarSolicitacaoUsuario(Guid solicitacaoId, SolicitacaoModel solicitacao)
+        //{
+        //    Solicitacao solicitacaoAtualizada = _mapper.Map<Solicitacao>(solicitacao);
+
+        //    await _usuarioServices.AtualizarSolicitacaoUsuario(UsuarioId, solicitacaoAtualizada)
+        //                          .ConfigureAwait(false);
+
+        //    return RespostaCustomizada("Solicitação atualizada com sucesso.");
+        //}
     }
 }

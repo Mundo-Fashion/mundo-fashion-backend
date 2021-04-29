@@ -1,7 +1,7 @@
 ﻿using System;
 using System.ComponentModel;
 
-namespace MundoFashion.Core.Enum.Servicos.Estampa
+namespace MundoFashion.Core.Enums.Servicos.Estampa
 {
     [Flags]
     public enum TipoTecnicaEstampa

@@ -4,15 +4,17 @@ namespace MundoFashion.WebApi.Models
 {
     public record UsuarioModel
     {
-        public string Username { get; private set; }
+        public string Nome { get; private set; }
+        public string Email { get; private set; }
         public string Password { get; private set; }
         public string Role { get; private set; }
         public ServicoEstampaModel Servico { get; set; }
         public DateTime CreatedAt { get; private set; }
 
-        public UsuarioModel(string username, string password, DateTime createdAt, string role = "")
+        public UsuarioModel(string nome, string email, string password, DateTime createdAt, string role = "")
         {
-            Username = username;
+            Nome = nome;
+            Email = email;
             Password = password;
             CreatedAt = createdAt;
             Role = role;
