@@ -85,7 +85,7 @@ namespace MundoFashion.WebApi.Controllers
             return RespostaCustomizada("Serviço atualizado com sucesso.");
         }
 
-        [HttpDelete]
+        [HttpPut]
         [Route("inativar-servico-usuario/{usuarioId:guid}")]
         public async Task<ActionResult<string>> InativarServicoUsuario(Guid usuarioId)
         {

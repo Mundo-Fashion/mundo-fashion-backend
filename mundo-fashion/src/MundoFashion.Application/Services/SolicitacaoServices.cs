@@ -2,6 +2,7 @@
 using MundoFashion.Core.Notifications;
 using MundoFashion.Domain;
 using MundoFashion.Domain.Repositories;
+using MundoFashion.Domain.Validacoes;
 using System;
 using System.Threading.Tasks;
 
@@ -25,14 +26,13 @@ namespace MundoFashion.Application.Services
                 return;
             }
 
-            solicitacao.CancelarSolicitacao();
+            solicitacao.Cancelar();
             
             _solicitacaoRepository.AtualizarSolicitacao(solicitacao);
             await _solicitacaoRepository.Commit().ConfigureAwait(false);
         }
 
-
-        public async Task AdicionarProposta(Guid solicitacaoId, Proposta proposta)
+        public async Task AceitarSolicitacao(Guid solicitacaoId)
         {
             Solicitacao solicitacao = await _solicitacaoRepository.ObterSolicitacaoPorId(solicitacaoId).ConfigureAwait(false);
 
@@ -42,7 +42,28 @@ namespace MundoFashion.Application.Services
                 return;
             }
 
+            solicitacao.AceitarSolicitacao();
+            solicitacao.IniciarNegociacao();
+
+            _solicitacaoRepository.AtualizarSolicitacao(solicitacao);
+            await _solicitacaoRepository.Commit().ConfigureAwait(false);
+        }
+
+
+        public async Task AdicionarProposta(Guid solicitacaoId, Proposta proposta)
+        {
+            if (!Validar<Proposta, PropostaValidator>(proposta)) return;
+
+            Solicitacao solicitacao = await _solicitacaoRepository.ObterSolicitacaoPorId(solicitacaoId).ConfigureAwait(false);
+
+            if (solicitacao is null)
+            {
+                Notificar("Solicitação não encontrada.");
+                return;
+            }
+
             solicitacao.AdicionarProposta(proposta);
+            solicitacao.IniciarNegociacao();
 
             _solicitacaoRepository.AtualizarSolicitacao(solicitacao);
             await _solicitacaoRepository.Commit().ConfigureAwait(false);
@@ -50,6 +71,8 @@ namespace MundoFashion.Application.Services
 
         public async Task AtualizarProposta(Guid solicitacaoId, Proposta proposta)
         {
+            if (!Validar<Proposta, PropostaValidator>(proposta)) return;
+
             Solicitacao solicitacao = await _solicitacaoRepository.ObterSolicitacaoPorId(solicitacaoId).ConfigureAwait(false);
 
             if (solicitacao is null)
@@ -88,6 +111,7 @@ namespace MundoFashion.Application.Services
             }
 
             solicitacao.Proposta?.AceitarProposta();
+            solicitacao.Negociado();
 
             _solicitacaoRepository.AtualizarProposta(solicitacao.Proposta);
             _solicitacaoRepository.AtualizarSolicitacao(solicitacao);

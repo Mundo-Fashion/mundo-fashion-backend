@@ -16,6 +16,7 @@ namespace MundoFashion.Domain
 
         public StatusSolicitacao Status { get; private set; }
         public DetalhesSolicitacao Detalhes { get; private set; }
+        public bool Aceita { get; private set; }
         public Guid DetalhesId { get; private set; }
 
         public Proposta Proposta { get; private set; }
@@ -54,7 +55,7 @@ namespace MundoFashion.Domain
         public void IniciarNegociacao()
            => Status = StatusSolicitacao.EmNegociacao;
 
-        public void CancelarSolicitacao()
+        public void Cancelar()
            => Status = StatusSolicitacao.Cancelada;
 
         public void Negociado()
@@ -65,5 +66,8 @@ namespace MundoFashion.Domain
 
         public void Entregue()
            => Status = StatusSolicitacao.Entregue;
+
+        public void AceitarSolicitacao()
+            => Aceita = true;
     }
 }

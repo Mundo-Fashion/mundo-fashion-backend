@@ -10,6 +10,7 @@ namespace MundoFashion.WebApi.Models
         public string NomeEmpresa { get; set; }
         public Guid UsuarioId { get; set; }
         public Guid EmpresaId { get; set; }
+        public Guid ServicoId { get; set; }
         public bool IsEmpresa { get; set; }
     }
 }

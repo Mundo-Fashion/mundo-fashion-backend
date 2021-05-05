@@ -51,6 +51,8 @@ namespace MundoFashion.Application.Services
 
         public async Task CriarServicoUsuario(Guid usuarioId, ServicoEstampa servico)
         {
+            // Validar<SErvico, validador>
+
             Usuario usuario = await _usuarioRepository.ObterUsuarioPorId(usuarioId);
 
             if (usuario.PossuiServico())
@@ -68,6 +70,8 @@ namespace MundoFashion.Application.Services
 
         public async Task AtualizarServicoUsuario(Guid usuarioId, ServicoEstampa servicoAtualizado)
         {
+            // Validar<SErvico, validador>
+
             Usuario usuario = await _usuarioRepository.ObterUsuarioPorId(usuarioId);
 
             if (!usuario.PossuiServico())
@@ -102,6 +106,8 @@ namespace MundoFashion.Application.Services
 
         public async Task AdicionarSolicitacaoUsuario(Guid usuarioId, Solicitacao solicitacao)
         {
+            // Validar<Solicitacao, validador>
+
             Usuario usuario = await _usuarioRepository.ObterUsuarioPorId(usuarioId);
 
             if (usuario is null)

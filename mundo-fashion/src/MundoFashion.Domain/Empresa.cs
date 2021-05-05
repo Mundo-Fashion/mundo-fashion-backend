@@ -42,5 +42,13 @@ namespace MundoFashion.Domain
         {
             UsuarioId = usuarioId;
         }
+        public void InativarServico()
+        {
+            if (PossuiServico())
+                Servico.Inativate();
+        }
+
+        public bool PossuiServico()
+            => !ServicoId.Equals(Guid.Empty);
     }
 }

@@ -10,6 +10,12 @@ namespace MundoFashion.Domain
         public Solicitacao Solicitacao { get; private set; }
         public Guid SolicitacaoId { get; private set; }
 
+        public Proposta(double valor)
+        {
+            Valor = valor;
+            Aceita = false;
+        }
+
         internal void AssociarSolicitacao(Guid solicitacaoId)
             => SolicitacaoId = solicitacaoId;
 
