@@ -6,12 +6,19 @@ namespace MundoFashion.Core
     {
         public Guid Id { get; private set; }
         public DateTime CreatedAt { get; private set; }
-        public bool Active { get; private set; }
 
         public Entity()
         {
             Id = Guid.NewGuid();
             CreatedAt = DateTime.Now;
+        }       
+    }
+
+    public abstract class ActivableEntity : Entity
+    {
+        public bool Active { get; private set; }
+        public ActivableEntity()
+        {
             Active = true;
         }
 

@@ -19,20 +19,20 @@ namespace MundoFashion.Application.Services
             _usuarioRepository = usuarioRepository;
         }
 
-        public async Task CriarUsuario(string username, string senha, string role = Roles.CLIENTE)
+        public async Task CriarUsuario(string nome, string email, string senha, string role = Roles.CLIENTE)
         {
-            if (await _usuarioRepository.UsuarioExiste(username))
+            if (await _usuarioRepository.UsuarioExiste(email))
             {
                 Notificar("Usuário já cadastrado");
                 return;
             }
 
-            Usuario novoUsuario = new Usuario(username, senha, role);
+            Usuario novoUsuario = new Usuario(nome, email, senha, role);
 
             if (!Validar<Usuario, UsuarioValidator>(novoUsuario)) return;
 
             _usuarioRepository.AdicionarUsuario(novoUsuario);
-            await _usuarioRepository.Commit();
+            await _usuarioRepository.Commit().ConfigureAwait(false);
         }
 
         public async Task CriarEmpresa(Guid usuarioId, Empresa empresa)
@@ -45,16 +45,18 @@ namespace MundoFashion.Application.Services
 
             _usuarioRepository.AdicionarEmpresa(empresa);
             _usuarioRepository.AtualizarUsuario(usuario);
-            await _usuarioRepository.Commit();
+            await _usuarioRepository.Commit().ConfigureAwait(false);
         }
 
         public async Task CriarServicoUsuario(Guid usuarioId, ServicoEstampa servico)
         {
+            if (!Validar<ServicoEstampa, ServicoEstampaValidator>(servico)) return;
+
             Usuario usuario = await _usuarioRepository.ObterUsuarioPorId(usuarioId);
 
             if (usuario.PossuiServico())
             {
-                Notificar($"O usuário '{usuario.Username}' já possui um serviço cadastrado. Altere-o!");
+                Notificar($"O usuário '{usuario.Email}' já possui um serviço cadastrado. Altere-o!");
                 return;
             }
 
@@ -62,16 +64,18 @@ namespace MundoFashion.Application.Services
 
             _usuarioRepository.AdicionarServico(servico);
             _usuarioRepository.AtualizarUsuario(usuario);
-            await _usuarioRepository.Commit();
+            await _usuarioRepository.Commit().ConfigureAwait(false);
         }
 
         public async Task AtualizarServicoUsuario(Guid usuarioId, ServicoEstampa servicoAtualizado)
         {
+            // Validar<SErvico, validador>
+
             Usuario usuario = await _usuarioRepository.ObterUsuarioPorId(usuarioId);
 
             if (!usuario.PossuiServico())
             {
-                Notificar($"O usuário {usuario.Username} não possui serviços cadastrados.");
+                Notificar($"O usuário {usuario.Email} não possui serviços cadastrados.");
                 return;
             }
 
@@ -79,10 +83,10 @@ namespace MundoFashion.Application.Services
 
             _usuarioRepository.AtualizarServico(usuario.Servico);
             _usuarioRepository.AtualizarUsuario(usuario);
-            await _usuarioRepository.Commit();
+            await _usuarioRepository.Commit().ConfigureAwait(false);
         }
 
-        public async Task RemoverServicoUsuario(Guid usuarioId)
+        public async Task InativarServicoUsuario(Guid usuarioId)
         {
             Usuario usuario = await _usuarioRepository.ObterUsuarioPorId(usuarioId);
 
@@ -92,11 +96,53 @@ namespace MundoFashion.Application.Services
                 return;
             }
 
-            usuario.RemoverServico();
+            usuario.InativarServico();
 
-            _usuarioRepository.RemoverServico(usuario.Servico);
             _usuarioRepository.AtualizarUsuario(usuario);
-            await _usuarioRepository.Commit();
+            _usuarioRepository.AtualizarServico(usuario.Servico);
+            await _usuarioRepository.Commit().ConfigureAwait(false);
         }
+
+        public async Task AdicionarSolicitacaoUsuario(Guid usuarioId, Solicitacao solicitacao)
+        {
+            if (!Validar<Solicitacao, SolicitacaoValidator>(solicitacao)) return;
+
+            Usuario usuario = await _usuarioRepository.ObterUsuarioPorId(usuarioId);
+
+            if (usuario is null)
+            {
+                Notificar("Usuário não encontrado na base de dados.");
+                return;
+            }
+
+            usuario.AdicionarSolicitacao(solicitacao);
+
+            _usuarioRepository.AdicionarSolicitacao(solicitacao);
+            _usuarioRepository.AtualizarUsuario(usuario);
+
+            await _usuarioRepository.Commit().ConfigureAwait(false);
+        }
+
+        //public async Task AtualizarSolicitacaoUsuario(Guid usuarioId, Guid solicitacaoId, Solicitacao solicitacaoAtualizada)
+        //{
+        //    Usuario usuario = await _usuarioRepository.ObterUsuarioPorIdComSolicitacoes(usuarioId).ConfigureAwait(false);
+
+        //    if (usuario is null)
+        //    {
+        //        Notificar("Usuário não encontrado na base de dados.");
+        //        return;
+        //    }
+
+        //    Solicitacao solicitacao = usuario.Solicitacoes.SingleOrDefault(u => u.Id == solicitacaoId);
+
+
+
+        //    usuario.AtualizarSolicitacao(solicitacao);
+
+        //    _usuarioRepository.AtualizarUsuario(usuario);
+        //    _usuarioRepository.AtualizarSolicitacao(solicitacao);
+
+        //    await _usuarioRepository.Commit().ConfigureAwait(false);
+        //}
     }
 }

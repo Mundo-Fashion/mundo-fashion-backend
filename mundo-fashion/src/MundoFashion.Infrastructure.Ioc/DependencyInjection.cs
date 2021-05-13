@@ -7,9 +7,12 @@ using Microsoft.IdentityModel.Tokens;
 using MundoFashion.Application.Services;
 using MundoFashion.Core.Notifications;
 using MundoFashion.Core.Notifications.Handlers;
+using MundoFashion.Core.Storage;
 using MundoFashion.Domain.Repositories;
 using MundoFashion.Infrastructure.Data;
 using MundoFashion.Infrastructure.Data.Repositories;
+using MundoFashion.Infrastructure.Storage;
+using MundoFashion.Infrastructure.Storage.Google;
 using System;
 using System.Reflection;
 using System.Text;
@@ -27,6 +30,12 @@ namespace MundoFashion.Infrastructure.Ioc
             AdicionarServices(services);
             AdicionarRepositories(services);
             AdicionarAutoMapper(services, aplicacaoAssembly);
+            AdicionarFileStorage(services);
+        }
+
+        private static void AdicionarFileStorage(IServiceCollection services)
+        {
+            services.AddSingleton<ICloudStorage, GoogleCloudStorage>();
         }
 
         private static void AdicionarAutoMapper(IServiceCollection services, Assembly aplicacaoAssembly)
@@ -38,12 +47,15 @@ namespace MundoFashion.Infrastructure.Ioc
         {
             services.AddScoped<IUsuarioRepository, UsuarioRepository>();
             services.AddScoped<IEmpresaRepository, EmpresaRepository>();
+            services.AddScoped<ISolicitacaoRepository, SolicitacaoRepository>();
         }
 
         private static void AdicionarServices(IServiceCollection services)
         {
             services.AddScoped<UsuarioServices>();
             services.AddScoped<AutenticacaoServices>();
+            services.AddScoped<SolicitacaoServices>();
+            services.AddScoped<EmpresaServices>();
         }
 
         private static void AdicionarMediatR(IServiceCollection services, Assembly aplicacaoAssembly)

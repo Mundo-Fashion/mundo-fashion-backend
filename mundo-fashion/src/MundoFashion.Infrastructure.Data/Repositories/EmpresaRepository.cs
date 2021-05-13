@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using MundoFashion.Domain;
 using MundoFashion.Domain.Repositories;
 using MundoFashion.Domain.Servicos;
 using System;
@@ -35,6 +36,35 @@ namespace MundoFashion.Infrastructure.Data.Repositories
             _context.Servicos.Remove(servico);
         }
 
+        public void AdicionarSolicitacao(Solicitacao solicitacao)
+        {
+            _context.Solicitacoes.Add(solicitacao);
+        }
+
+        public void AtualizarSolicitacao(Solicitacao solicitacao)
+        {
+            _context.Solicitacoes.Update(solicitacao);
+        }
+
+        public async Task<Solicitacao> ObterSolicitacaoPorId(Guid id)
+        {
+            return await _context.Solicitacoes.SingleOrDefaultAsync(s => s.Id == id);
+        }
+
+        public void AdicionarEmpresa(Empresa empresa)
+        {
+            _context.Empresas.Add(empresa);
+        }
+
+        public void AtualizarEmpresa(Empresa empresa)
+        {
+            _context.Empresas.Update(empresa);
+        }
+
+        public async Task<Empresa> ObterEmpresaPorId(Guid id)
+        {
+            return await _context.Empresas.SingleOrDefaultAsync(e => e.Id == id);
+        }
         public async Task<bool> Commit()
         {
             return await _context.SaveChangesAsync() > 0;

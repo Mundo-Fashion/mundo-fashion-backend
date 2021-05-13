@@ -1,4 +1,4 @@
-﻿using MundoFashion.Core.Enum.Servicos.Estampa;
+﻿using MundoFashion.Core.Enums.Servicos.Estampa;
 
 namespace MundoFashion.Domain.Servicos
 {
@@ -8,16 +8,16 @@ namespace MundoFashion.Domain.Servicos
         public TipoTecnicaEstampa Tecnica { get; private set; }
         public TipoTecnicaEstamparia TecnicaEstamparia { get; private set; }
         public TipoNicho Nicho { get; private set; }
-        public TipoRapport TipoRapport { get; private set; }
+        public TipoRapport TipoRapport { get; private set; }        
 
-        public ServicoEstampa() { }
+        private ServicoEstampa() { }
 
         public ServicoEstampa(
             TipoEstampa tipoEstampa,
             TipoTecnicaEstampa tecnica,
             TipoTecnicaEstamparia tecnicaEstamparia,
             TipoNicho nicho,
-            TipoRapport tipoRapport) 
+            TipoRapport tipoRapport)
         {
             TipoEstampa = tipoEstampa;
             Tecnica = tecnica;
