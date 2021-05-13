@@ -1,10 +1,13 @@
 ﻿using AutoMapper;
 using MediatR;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using MundoFashion.Application.Services;
 using MundoFashion.Core.Notifications;
+using MundoFashion.Core.Storage;
 using MundoFashion.Domain;
 using MundoFashion.Domain.Repositories;
+using MundoFashion.Domain.Servicos;
 using MundoFashion.WebApi.Controllers.Base;
 using MundoFashion.WebApi.Models;
 using System;
@@ -15,25 +18,43 @@ namespace MundoFashion.WebApi.Controllers
     public class EmpresaController : ApiControllerBase
     {
         private readonly IMapper _mapper;
+        private readonly ICloudStorage _cloudStorage;
         private readonly EmpresaServices _empresaServices;
-        private readonly IEmpresaRepository _empresaRepository;
 
-        public EmpresaController(INotificationHandler<Notificacao> notificacoes, IMapper mapper, IEmpresaRepository empresaRepository) : base(notificacoes)
+        public EmpresaController(INotificationHandler<Notificacao> notificacoes, IMapper mapper, IEmpresaRepository empresaRepository, EmpresaServices empresaServices, ICloudStorage cloudStorage) : base(notificacoes)
         {
             _mapper = mapper;
-            _empresaRepository = empresaRepository;
+            _empresaServices = empresaServices;
+            _cloudStorage = cloudStorage;
         }
 
         [HttpPost]
         [Route("criar-solicitacao-empresa")]
-        public async Task<ActionResult<string>> CriarSolicitacaoEmpresa(SolicitacaoModel solicitacao)
+        public async Task<ActionResult<string>> CriarSolicitacaoEmpresa([FromForm] SolicitacaoModel solicitacao)
         {
             Solicitacao novaSolicitacao = _mapper.Map<Solicitacao>(solicitacao);
 
-            await _empresaServices.AdicionarSolicitacaoEmpresa(UsuarioId, novaSolicitacao)
-                                  .ConfigureAwait(false);
+            foreach (IFormFile imagem in solicitacao.Detalhes.ImagensUpload)
+            {
+                string nomeImagem = $"{Guid.NewGuid()}_{imagem.FileName}";
+                novaSolicitacao.Detalhes.AdicionarImagem(await _cloudStorage.UploadFileAsync(imagem, nomeImagem).ConfigureAwait(false));
+            }
+
+            await _empresaServices.AdicionarSolicitacaoEmpresa(solicitacao.EmpresaId.GetValueOrDefault(), novaSolicitacao)
+                                   .ConfigureAwait(false);
 
             return RespostaCustomizada("Solicitação criada com sucesso.");
+        }
+
+        [HttpPost]
+        [Route("criar-servico-empresa/{empresaId:guid}")]
+        public async Task<ActionResult<string>> CriarServicoEmpresa(Guid empresaId, ServicoEstampaModel servico)
+        {
+            ServicoEstampa novoServico = _mapper.Map<ServicoEstampa>(servico);
+
+            await _empresaServices.CriarServicoEmpresa(empresaId, novoServico).ConfigureAwait(false);
+
+            return RespostaCustomizada("Serviço criado com sucesso.");
         }
 
         [HttpPut]

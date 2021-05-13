@@ -9,6 +9,7 @@ namespace MundoFashion.Domain
     {
         private readonly List<string> _imagens;
 
+        private DetalhesSolicitacao() { }
         public DetalhesSolicitacao(TipoEstampa tipoEstampa = 0,
             TipoTecnicaEstampa tecnica = 0,
             TipoTecnicaEstamparia tecnicaEstamparia = 0,
@@ -26,7 +27,7 @@ namespace MundoFashion.Domain
             _imagens = new List<string>();
         }
 
-        public IReadOnlyCollection<string> Imagens => _imagens.AsReadOnly();
+        public string[] Imagens { get; private set; }
         public TipoEstampa TipoEstampa { get; private set; }
         public TipoTecnicaEstampa Tecnica { get; private set; }
         public TipoTecnicaEstamparia TecnicaEstamparia { get; private set; }
@@ -55,10 +56,16 @@ namespace MundoFashion.Domain
             => TipoRapport = tipoRapport;
 
         public void AdicionarImagem(string imagem)
-           => _imagens.Add(imagem);
+        {
+            _imagens.Add(imagem);
+            Imagens = _imagens.ToArray();
+        }
 
         public void RemoverImagem(string imagem)
-          => _imagens.Remove(imagem);
+        {
+            _imagens.Remove(imagem);
+            Imagens = _imagens.ToArray();
+        }
 
         public void AtualizarObservacao(string observacao)
           => Observacoes = observacao;

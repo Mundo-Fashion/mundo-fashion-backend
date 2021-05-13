@@ -1,10 +1,12 @@
 ﻿using AutoMapper;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using MundoFashion.Application.Services;
 using MundoFashion.Core.Constants;
 using MundoFashion.Core.Notifications;
+using MundoFashion.Core.Storage;
 using MundoFashion.Domain;
 using MundoFashion.Domain.Repositories;
 using MundoFashion.Domain.Servicos;
@@ -14,20 +16,20 @@ using System;
 using System.Threading.Tasks;
 
 namespace MundoFashion.WebApi.Controllers
-{
-    [Route("api/[controller]")]
-    [ApiController]
+{   
     [Authorize]
     public class UsuarioController : ApiControllerBase
     {
         private readonly UsuarioServices _usuarioServices;
         private readonly IUsuarioRepository _usuarioRepository;
         private readonly IMapper _mapper;
-        public UsuarioController(INotificationHandler<Notificacao> notificacoes, UsuarioServices usuarioServices, IMapper mapper, IUsuarioRepository usuarioRepository) : base(notificacoes)
+        private readonly ICloudStorage _cloudStorage;
+        public UsuarioController(INotificationHandler<Notificacao> notificacoes, UsuarioServices usuarioServices, IMapper mapper, IUsuarioRepository usuarioRepository, ICloudStorage cloudStorage) : base(notificacoes)
         {
             _usuarioServices = usuarioServices;
             _mapper = mapper;
             _usuarioRepository = usuarioRepository;
+            _cloudStorage = cloudStorage;
         }
 
         [HttpPost]
@@ -100,6 +102,12 @@ namespace MundoFashion.WebApi.Controllers
         public async Task<ActionResult<string>> CriarSolicitacaoUsuario(SolicitacaoModel solicitacao)
         {
             Solicitacao novaSolicitacao = _mapper.Map<Solicitacao>(solicitacao);
+
+            foreach (IFormFile imagem in solicitacao.Detalhes.ImagensUpload)
+            {
+                string nomeImagem = $"{Guid.NewGuid()}_{imagem.FileName}";
+                novaSolicitacao.Detalhes.AdicionarImagem(await _cloudStorage.UploadFileAsync(imagem, nomeImagem).ConfigureAwait(false));
+            }
 
             await _usuarioServices.AdicionarSolicitacaoUsuario(UsuarioId, novaSolicitacao)
                                   .ConfigureAwait(false);

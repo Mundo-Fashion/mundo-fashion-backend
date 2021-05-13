@@ -13,17 +13,27 @@ using System.Threading.Tasks;
 
 namespace MundoFashion.WebApi.Controllers
 {
-    [ApiController]
     [Authorize]
     public class SolicitacaoController : ApiControllerBase
     {
         private readonly ISolicitacaoRepository _solicitacaoRepository;
         private readonly SolicitacaoServices _solicitacaoServices;
         private readonly IMapper _mapper;
-        public SolicitacaoController(INotificationHandler<Notificacao> notificacoes, IMapper mapper, SolicitacaoServices solicitacaoServices) : base(notificacoes)
+        public SolicitacaoController(INotificationHandler<Notificacao> notificacoes, IMapper mapper, SolicitacaoServices solicitacaoServices, ISolicitacaoRepository solicitacaoRepository) : base(notificacoes)
         {
             _mapper = mapper;
             _solicitacaoServices = solicitacaoServices;
+            _solicitacaoRepository = solicitacaoRepository;
+        }
+
+        [HttpGet]
+        [Route("obter-solicitacao/{solicitacaoId:guid}")]
+        public async Task<ActionResult<SolicitacaoModel>> ObterSolicitacao(Guid solicitacaoId)
+        {
+            Solicitacao solicitacao = await _solicitacaoRepository.ObterSolicitacaoPorId(solicitacaoId).ConfigureAwait(false);
+            SolicitacaoModel solicitacaoModel = _mapper.Map<SolicitacaoModel>(solicitacao);
+
+            return RespostaCustomizada(solicitacaoModel);
         }
 
         [HttpPost]
@@ -58,7 +68,7 @@ namespace MundoFashion.WebApi.Controllers
         }
 
         [HttpPut]
-        [Route("aceitar-solicitacao/{solicitacaoId:guid")]
+        [Route("aceitar-solicitacao/{solicitacaoId:guid}")]
         public async Task<ActionResult<string>> AceitarSolicitacao(Guid solicitacaoId)
         {
             await _solicitacaoServices.AceitarSolicitacao(solicitacaoId);
@@ -86,6 +96,19 @@ namespace MundoFashion.WebApi.Controllers
             solicitacao.Cancelar();
 
             return RespostaCustomizada("Solicitação cancelada.");
+        }
+
+        [HttpPost]
+        [Route("adicionar-mensagem-solicitacao")]
+        [AllowAnonymous]
+
+        public async Task<ActionResult<string>> AdicionarMensagemSolicitacao(MensagemModel mensagem)
+        {
+            Mensagem novaMensagem = _mapper.Map<Mensagem>(mensagem);
+
+            await _solicitacaoServices.AdicionarMensagem(mensagem.solicitacaoId, novaMensagem).ConfigureAwait(false);
+
+            return RespostaCustomizada("Mensagem adicionada com sucesso.");
         }
     }
 }

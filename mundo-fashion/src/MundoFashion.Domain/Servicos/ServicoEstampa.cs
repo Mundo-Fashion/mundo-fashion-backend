@@ -10,14 +10,14 @@ namespace MundoFashion.Domain.Servicos
         public TipoNicho Nicho { get; private set; }
         public TipoRapport TipoRapport { get; private set; }        
 
-        public ServicoEstampa() { }
+        private ServicoEstampa() { }
 
         public ServicoEstampa(
             TipoEstampa tipoEstampa,
             TipoTecnicaEstampa tecnica,
             TipoTecnicaEstamparia tecnicaEstamparia,
             TipoNicho nicho,
-            TipoRapport tipoRapport) 
+            TipoRapport tipoRapport)
         {
             TipoEstampa = tipoEstampa;
             Tecnica = tecnica;

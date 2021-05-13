@@ -6,7 +6,6 @@ using MundoFashion.Domain.Repositories;
 using MundoFashion.Domain.Servicos;
 using MundoFashion.Domain.Validacoes;
 using System;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace MundoFashion.Application.Services
@@ -51,7 +50,7 @@ namespace MundoFashion.Application.Services
 
         public async Task CriarServicoUsuario(Guid usuarioId, ServicoEstampa servico)
         {
-            // Validar<SErvico, validador>
+            if (!Validar<ServicoEstampa, ServicoEstampaValidator>(servico)) return;
 
             Usuario usuario = await _usuarioRepository.ObterUsuarioPorId(usuarioId);
 
@@ -106,7 +105,7 @@ namespace MundoFashion.Application.Services
 
         public async Task AdicionarSolicitacaoUsuario(Guid usuarioId, Solicitacao solicitacao)
         {
-            // Validar<Solicitacao, validador>
+            if (!Validar<Solicitacao, SolicitacaoValidator>(solicitacao)) return;
 
             Usuario usuario = await _usuarioRepository.ObterUsuarioPorId(usuarioId);
 

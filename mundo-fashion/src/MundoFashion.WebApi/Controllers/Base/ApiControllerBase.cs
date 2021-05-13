@@ -9,11 +9,13 @@ using System.Security.Claims;
 
 namespace MundoFashion.WebApi.Controllers.Base
 {
+    [ApiController]
+    [Route("api/[controller]")]
     public abstract class ApiControllerBase : ControllerBase
     {
         private readonly NotificacaoHandler _notificacoes;
 
-        protected Guid UsuarioId => Guid.Parse(User.FindFirst(ClaimTypes.Email).Value);
+        protected Guid UsuarioId => Guid.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
         protected ApiControllerBase(INotificationHandler<Notificacao> notificacoes)
         {
             _notificacoes = (NotificacaoHandler)notificacoes;

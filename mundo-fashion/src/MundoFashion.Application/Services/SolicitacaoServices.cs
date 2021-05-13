@@ -140,5 +140,23 @@ namespace MundoFashion.Application.Services
             _solicitacaoRepository.AtualizarSolicitacao(solicitacao);
             await _solicitacaoRepository.Commit().ConfigureAwait(false);
         }
+
+        public async Task AdicionarMensagem(Guid solicitacaoId, Mensagem mensagem)
+        {
+            Solicitacao solicitacao = await _solicitacaoRepository.ObterSolicitacaoPorId(solicitacaoId).ConfigureAwait(false);
+
+            if (solicitacao is null)
+            {
+                Notificar("Solicitação não encontrada.");
+                return;
+            }
+
+            solicitacao.AdicionarMensagem(mensagem);
+
+            _solicitacaoRepository.AdicionarMensagem(mensagem);
+            _solicitacaoRepository.AtualizarSolicitacao(solicitacao);
+
+            await _solicitacaoRepository.Commit().ConfigureAwait(false);
+        }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using MundoFashion.Domain;
+using System.Collections.Generic;
 
 namespace MundoFashion.Infrastructure.Data.Mappings
 {
@@ -13,6 +14,9 @@ namespace MundoFashion.Infrastructure.Data.Mappings
             builder.HasOne(d => d.Solicitacao)
                 .WithOne(s => s.Detalhes)
                 .HasForeignKey<Solicitacao>(s => s.DetalhesId);
+
+            builder.Property(s => s.Imagens)
+                .HasColumnType("text[]");
 
             builder.ToTable("DetalhesSolicitacoes");
         }

@@ -17,7 +17,7 @@ namespace MundoFashion.Infrastructure.Data.Mappings
             builder.HasOne(s => s.Proposta)
                 .WithOne(p => p.Solicitacao)
                 .HasForeignKey<Proposta>(p => p.SolicitacaoId);
-
+            
             builder.ToTable("Solicitacoes");
         }
     }

@@ -6,7 +6,7 @@ using System.Collections.Generic;
 
 namespace MundoFashion.Domain
 {
-    public class Empresa : Entity, IAggregateRoot
+    public class Empresa : ActivableEntity, IAggregateRoot
     {
         private readonly List<Solicitacao> _solicitacoes;
 
@@ -36,6 +36,7 @@ namespace MundoFashion.Domain
         public void AdicionarServico(ServicoEstampa servico)
         {
             servico.AssociarEmpresa(Id);
+            ServicoId = servico.Id;
         }
 
         internal void AssociarUsuario(Guid usuarioId)

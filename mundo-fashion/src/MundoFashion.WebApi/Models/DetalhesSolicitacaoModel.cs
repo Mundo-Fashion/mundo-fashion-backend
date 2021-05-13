@@ -1,4 +1,7 @@
-﻿namespace MundoFashion.WebApi.Models
+﻿using Microsoft.AspNetCore.Http;
+using System.Collections.Generic;
+
+namespace MundoFashion.WebApi.Models
 {
     public record DetalhesSolicitacaoModel
     {
@@ -8,5 +11,7 @@
         public int TipoNicho { get; set; }
         public int TipoRapport { get; set; }
         public string Observacoes { get; set; }
+        public List<IFormFile> ImagensUpload { get; set; }
+        public string[] Imagens { get; set; }
     }
 }

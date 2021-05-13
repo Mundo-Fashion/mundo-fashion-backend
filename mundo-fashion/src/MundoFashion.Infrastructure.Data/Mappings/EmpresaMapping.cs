@@ -18,6 +18,10 @@ namespace MundoFashion.Infrastructure.Data.Mappings
                 .WithOne(s => s.Empresa)
                 .HasForeignKey<ServicoEstampa>(x => x.EmpresaId);
 
+            builder.HasMany(u => u.Solicitacoes)
+                .WithOne(s => s.Empresa)
+                .HasForeignKey(s => s.EmpresaId);
+
             builder.ToTable("Empresas");
         }
     }

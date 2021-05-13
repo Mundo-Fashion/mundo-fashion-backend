@@ -65,11 +65,24 @@ namespace MundoFashion.Infrastructure.Data.Repositories
 
         public async Task<Solicitacao> ObterSolicitacaoPorId(Guid id)
         {
-            return await _context.Solicitacoes.Include(s => s.Proposta).Include(s => s.Servico).SingleOrDefaultAsync(s => s.Id == id);
+            return await _context.Solicitacoes
+                .Include(s => s.Usuario)
+                .Include(s => s.Empresa)
+                .Include(s => s.Proposta)
+                .Include(s => s.Servico)
+                .Include(s => s.Detalhes)
+                .Include(s => s.Mensagens)
+                .AsNoTracking()
+                .SingleOrDefaultAsync(s => s.Id == id);
+        }
+        public void AdicionarMensagem(Mensagem mensagem)
+        {
+            _context.Mensagens.Add(mensagem);
         }
         public void Dispose()
         {
             _context?.Dispose();
         }
+
     }
 }

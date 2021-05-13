@@ -16,7 +16,7 @@
   <ItemGroup>
     <ProjectReference Include="..\MundoFashion.Application\MundoFashion.Application.csproj" />
     <ProjectReference Include="..\MundoFashion.Core\MundoFashion.Core.csproj" />
-    <ProjectReference Include="..\MundoFashion.Infrastructure.Amazon\MundoFashion.Infrastructure.Amazon.csproj" />
+    <ProjectReference Include="..\MundoFashion.Infrastructure.Amazon\MundoFashion.Infrastructure.Storage.csproj" />
     <ProjectReference Include="..\MundoFashion.Infrastructure.Data\MundoFashion.Infrastructure.Data.csproj" />
   </ItemGroup>
 
