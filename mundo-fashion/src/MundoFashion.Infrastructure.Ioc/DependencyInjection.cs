@@ -12,6 +12,7 @@ using MundoFashion.Domain.Repositories;
 using MundoFashion.Infrastructure.Data;
 using MundoFashion.Infrastructure.Data.Repositories;
 using MundoFashion.Infrastructure.Storage.Google;
+using System;
 using System.Reflection;
 using System.Text;
 
@@ -63,7 +64,8 @@ namespace MundoFashion.Infrastructure.Ioc
 
         private static void AdicionarDatabase(IServiceCollection services, IConfiguration configuration)
         {
-            services.AddDbContext<MundoFashionContext>(options => options.UseNpgsql(configuration.GetConnectionString("DefaultConnection")));
+            string connectionString = Environment.GetEnvironmentVariable("DATABASE_CONNECTION_STRING") ?? configuration.GetConnectionString("DefaultConnection");
+            services.AddDbContext<MundoFashionContext>(options => options.UseNpgsql(connectionString));
 
         }
 
