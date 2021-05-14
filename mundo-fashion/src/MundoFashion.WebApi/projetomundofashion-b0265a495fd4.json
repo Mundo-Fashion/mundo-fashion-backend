@@ -1,0 +1,12 @@
+{
+  "type": "service_account",
+  "project_id": "projetomundofashion",
+  "private_key_id": "b0265a495fd440c200c3dc45940a760adf1e9c6e",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvAIBADANBgkqhkiG9w0BAQEFAASCBKYwggSiAgEAAoIBAQCS9EUFzOAu9f9c\ndRxp4ZdlzcYf0Hzuzz9dTUxwLfM4+7GfxVllzGkdBK/7z8BIolhob0YJWDnHyylp\nFMY/S5i+xt1Q2jcGnyggT1Dd9/s40vflUBxpRI0gyuEE1iTTyeIRWTGleuwJ/RJb\nKqMG7+EaIpA/gUS0pKiQfsG/QVaiu1g+eAQP2tDbg8TiCyvZXTTgGjWpidcPLK7N\nqY38rt2LlR0EjdJvoSjsKM/kfnOL1Bzz9jjB8TH+Fhk2BQWw1uQ9gGVMGPAGFA5p\nkDra0TiL8DFkfk2xwA2Rgsjs1GhvAaZPWMBW2BIKoC4IIlW+NOM3OXkDALxOHc3n\nREhJqQ45AgMBAAECggEAANtHo7cD/4ITkPhlyAA2n7NJWloewE2Y8vRGY8kAx+4/\npMzDrqI4YqDqXa9iUYoQtdsgL2HCRHXcse4bEbdhFouWMqhy9ajr1PRhZknRvw0L\nwNxsrfhmUjCciyisYkek97DrZymGQrCk8L8Y4Ct5xms5KAWa3uquyNjUTEcXOC+Z\nGsg6yss5m9Bh7FbjYmhrc1gSzdKl/4lN1Dd+jpeKDAeGjKAuRaH5DpL9zfnEwm8t\nQ7brX0qSkVxrf+KUfPfrRlXHtMPN3Trm0bPlA6RqwyWPDmzrBdhsceC2gyCT39wv\ncPLia5PUzipC4BkLvMMVJHYmIRHww+1QSnAWXHwcGQKBgQDJv3posLUt3Myb9jch\ncJ4uxBa6LLuf0kcEi5KsO7L66QpOuIpuzVFdaoEOHYrlmL5LAp7gQsBnkv34LWAj\n6mChhOR6y7BTgb5/TquBpmtaONrZWauy7+z7oj1VKwj/OSWaxf/vPvsLkW7zHzCS\nPWRICjFoConXegnBUPP4yLMBNwKBgQC6eLw3gKSyYeeWV9mWRgd+5WE0hTbhVX2L\nwIhKPZGSgVIf9GdPp4JDxKN7bsbU2al03Rz737rv/d3rN4Bxfc/mEbQDmjPq5wEW\nEl+NSOI/HpiPAXUm+n0YbypicKU1/C+c3uinO+IhSDnqQB4awJm3oMX+usNm7X3J\nvO3uniHkDwKBgE7wYAoUkl/GlDy2Iy4vbYVo7mecVzGaynTp09MWbNqmUoUoyem+\n5oZBxQtr3cwmbtbUyKuBEt2z8zGnN4X2ECdC40904aJbEtmnQ44wOrMLqf3/iyIx\npK109sCbXSLYDnG35YOMRhhpqFryqkOeR920N065SOQJ+UUt0rhWd0wTAoGAf7U4\nknqUUWckCJ9Z8cU8VPgbvrCNiX3XYeMWdGH+VOwkpqXoK3F5kZgWru6LVjNMDzFw\nLEBp8vtXBUUZvqB/xf3R37W4YOScpdUng8eqy7fUm/xPk8Zx7k4UJR8oxvRUV4eC\npyYoFMs2fuwysfe+TzjY4UBfmxqDz6qI+adrZpkCgYBbvT6MvJoVG/vCGYtRls2Y\nDG1mW5hmzTVYX74DnVx7FBsEmoL1OkLsBgAvGRVeMnjhlkMHn1oDRBuRs9RXVyxX\nLvp64TKrliWqOrrsC2/Bk998g/LblRX1cecznlZlMoXJkZQCchdbh0V6uhYVmTDr\n6H8/oj2z+9V8pdH6Bjl5sw==\n-----END PRIVATE KEY-----\n",
+  "client_email": "andrei@projetomundofashion.iam.gserviceaccount.com",
+  "client_id": "106909533088463731397",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/andrei%40projetomundofashion.iam.gserviceaccount.com"
+}
