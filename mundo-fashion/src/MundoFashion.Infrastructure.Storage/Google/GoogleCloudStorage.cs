@@ -3,6 +3,7 @@ using Google.Cloud.Storage.V1;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using MundoFashion.Core.Storage;
+using System;
 using System.IO;
 using System.Threading.Tasks;
 
@@ -16,7 +17,7 @@ namespace MundoFashion.Infrastructure.Storage.Google
 
         public GoogleCloudStorage(IConfiguration configuration)
         {
-            _googleCredential = GoogleCredential.FromFile(configuration["GoogleCredentialFile"]);
+            _googleCredential = GoogleCredential.FromJson(Environment.GetEnvironmentVariable("GOOGLE_CREDENTIAL_FILE") ?? configuration["GoogleCredentialFile"]);
             _storageClient = StorageClient.Create(_googleCredential);
             _bucketName = configuration["GoogleCloudStorageBucket"];
         }
