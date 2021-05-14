@@ -17,7 +17,10 @@ namespace MundoFashion.Infrastructure.Storage.Google
 
         public GoogleCloudStorage(IConfiguration configuration)
         {
-            _googleCredential = GoogleCredential.FromJson(Environment.GetEnvironmentVariable("GOOGLE_CREDENTIAL_FILE") ?? configuration["GoogleCredentialFile"]);
+            string credentialFileFromEnv = Environment.GetEnvironmentVariable("GOOGLE_CREDENTIAL_FILE");
+            string credentialFile = credentialFileFromEnv ?? configuration["GoogleCredentialFile"];
+
+            _googleCredential = string.IsNullOrWhiteSpace(credentialFileFromEnv) ? GoogleCredential.FromFile(credentialFile) : GoogleCredential.FromJson(credentialFile);
             _storageClient = StorageClient.Create(_googleCredential);
             _bucketName = configuration["GoogleCloudStorageBucket"];
         }
