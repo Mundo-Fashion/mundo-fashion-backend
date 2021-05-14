@@ -15,7 +15,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MundoFashion.Infrastructure
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MundoFashion.Application", "src\MundoFashion.Application\MundoFashion.Application.csproj", "{C9CA9D28-C18C-4FFD-8C06-3B517CA0C38B}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MundoFashion.Infrastructure.Storage", "src\MundoFashion.Infrastructure.Amazon\MundoFashion.Infrastructure.Storage.csproj", "{64CB170B-1A02-4DAF-8AD6-E9333CAE7FE9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MundoFashion.Infrastructure.Storage", "src\MundoFashion.Infrastructure.Storage\MundoFashion.Infrastructure.Storage.csproj", "{64CB170B-1A02-4DAF-8AD6-E9333CAE7FE9}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
