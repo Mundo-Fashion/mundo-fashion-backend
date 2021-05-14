@@ -11,9 +11,7 @@ using MundoFashion.Core.Storage;
 using MundoFashion.Domain.Repositories;
 using MundoFashion.Infrastructure.Data;
 using MundoFashion.Infrastructure.Data.Repositories;
-using MundoFashion.Infrastructure.Storage;
 using MundoFashion.Infrastructure.Storage.Google;
-using System;
 using System.Reflection;
 using System.Text;
 
