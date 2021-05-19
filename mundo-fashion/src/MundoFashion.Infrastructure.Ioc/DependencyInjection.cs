@@ -47,6 +47,7 @@ namespace MundoFashion.Infrastructure.Ioc
             services.AddScoped<IUsuarioRepository, UsuarioRepository>();
             services.AddScoped<IEmpresaRepository, EmpresaRepository>();
             services.AddScoped<ISolicitacaoRepository, SolicitacaoRepository>();
+            services.AddScoped<IServicoRepository, ServicoRepository>();
         }
 
         private static void AdicionarServices(IServiceCollection services)

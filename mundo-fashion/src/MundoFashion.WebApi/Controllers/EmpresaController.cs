@@ -48,9 +48,15 @@ namespace MundoFashion.WebApi.Controllers
 
         [HttpPost]
         [Route("criar-servico-empresa/{empresaId:guid}")]
-        public async Task<ActionResult<string>> CriarServicoEmpresa(Guid empresaId, ServicoEstampaModel servico)
+        public async Task<ActionResult<string>> CriarServicoEmpresa(Guid empresaId, [FromForm]ServicoEstampaModel servico)
         {
             ServicoEstampa novoServico = _mapper.Map<ServicoEstampa>(servico);
+
+            foreach (IFormFile imagem in servico.ImagensUpload)
+            {
+                string nomeImagem = $"{Guid.NewGuid()}_{imagem.FileName}";
+                novoServico.AdicionarImagem(await _cloudStorage.UploadFileAsync(imagem, nomeImagem).ConfigureAwait(false));
+            }
 
             await _empresaServices.CriarServicoEmpresa(empresaId, novoServico).ConfigureAwait(false);
 

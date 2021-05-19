@@ -69,7 +69,7 @@ namespace MundoFashion.Application.Services
 
         public async Task AtualizarServicoUsuario(Guid usuarioId, ServicoEstampa servicoAtualizado)
         {
-            // Validar<SErvico, validador>
+            if (!Validar<ServicoEstampa, ServicoEstampaValidator>(servicoAtualizado)) return;
 
             Usuario usuario = await _usuarioRepository.ObterUsuarioPorId(usuarioId);
 

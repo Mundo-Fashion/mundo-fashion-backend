@@ -16,5 +16,6 @@ namespace MundoFashion.Domain.Repositories
         void AtualizarProposta(Proposta proposta);
         Task<Proposta> ObterPropostaPorId(Guid id);
         void AdicionarMensagem(Mensagem mensagem);
+        //Task<Solicitacao> GetByPageAsync(int limit, int page);
     }
 }
