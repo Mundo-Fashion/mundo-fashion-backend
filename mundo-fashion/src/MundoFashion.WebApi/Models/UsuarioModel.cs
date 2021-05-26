@@ -1,23 +1,19 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace MundoFashion.WebApi.Models
 {
     public record UsuarioModel
     {
-        public string Nome { get; private set; }
-        public string Email { get; private set; }
-        public string Password { get; private set; }
-        public string Role { get; private set; }
+        public Guid Id { get; set; }
+        public string Nome { get; set; }
+        public string Email { get; set; }
+        public string Senha { get; set; }
+        public string Role { get; set; }
+        public string Cpf { get; set; }
+        public List<EmpresaModel> Empresas { get; set; }
+        public List<SolicitacaoModel> Solicitacoes { get; set; }
         public ServicoEstampaModel Servico { get; set; }
-        public DateTime CreatedAt { get; private set; }
-
-        public UsuarioModel(string nome, string email, string password, DateTime createdAt, string role = "")
-        {
-            Nome = nome;
-            Email = email;
-            Password = password;
-            CreatedAt = createdAt;
-            Role = role;
-        }
+        public DateTime CreatedAt { get; set; }
     }
 }

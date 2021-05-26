@@ -10,6 +10,8 @@ namespace MundoFashion.Domain.Repositories
         void AdicionarUsuario(Usuario usuario);
         void AtualizarUsuario(Usuario usuario);
         Task<Usuario> ObterUsuarioPorId(Guid id);
+        Task<Usuario> ObterUsuarioCompletoPorId(Guid id);
+
         Task<Usuario> ObterUsuarioPorIdComEmpresaes(Guid id);
         Task<Usuario> ObterUsuarioPorIdComSolicitacoes(Guid id);
         Task<bool> UsuarioExiste(string username);

@@ -2,6 +2,7 @@
 using MundoFashion.Domain;
 using MundoFashion.Domain.Servicos;
 using MundoFashion.WebApi.Models;
+using System.Collections.Generic;
 
 namespace MundoFashion.WebApi.ProfileMaps
 {

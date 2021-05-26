@@ -14,13 +14,15 @@ namespace MundoFashion.WebApi.ProfileMaps
                 .ForMember(s => s.Status, s => s.MapFrom(x => EnumUtils.ObterValorEmTexto(x.Status)))
                 .ForMember(s => s.NomeUsuario, s => s.MapFrom(x => x.Usuario.Nome))
                 .ForMember(s => s.NomeEmpresa, s => s.MapFrom(x => x.Empresa.Nome))
-                .ForMember(s => s.IsEmpresa, s => s.MapFrom(x => !x.EmpresaId.Equals(Guid.Empty)));
+                .ForMember(s => s.IsEmpresa, s => s.MapFrom(x => x.EmpresaId.HasValue && !x.EmpresaId.Equals(Guid.Empty)))
+                .ForMember(s => s.PrestadorServicoId, s => s.MapFrom(x => x.Servico.ObterIdPrestador()));
 
             CreateMap<Solicitacao, SolicitacaoModel>()
                 .ForMember(s => s.Status, s => s.MapFrom(x => EnumUtils.ObterValorEmTexto(x.Status)))
-                .ForMember(s => s.NomeUsuario, s => s.MapFrom(x => x.Usuario.Nome))
-                .ForMember(s => s.NomeEmpresa, s => s.MapFrom(x => x.Empresa.Nome))
-                .ForMember(s => s.IsEmpresa, s => s.MapFrom(x => !x.EmpresaId.Equals(Guid.Empty)))
+                .ForMember(s => s.NomeUsuario, s => s.MapFrom(x => x.Servico.Usuario.Nome))
+                .ForMember(s => s.NomeEmpresa, s => s.MapFrom(x => x.Servico.Empresa.Nome))
+                .ForMember(s => s.IsEmpresa, s => s.MapFrom(x => x.EmpresaId.HasValue && !x.EmpresaId.Equals(Guid.Empty)))
+                .ForMember(s => s.PrestadorServicoId, s => s.MapFrom(x => x.Servico.ObterIdPrestador()))
                 .ReverseMap();
 
             CreateMap<SolicitacaoModel, Solicitacao>()

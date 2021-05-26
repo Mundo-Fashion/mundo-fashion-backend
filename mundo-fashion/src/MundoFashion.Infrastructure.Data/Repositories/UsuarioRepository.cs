@@ -29,7 +29,23 @@ namespace MundoFashion.Infrastructure.Data.Repositories
         public async Task<Usuario> ObterUsuarioPorId(Guid id)
         {
             return await _context.Usuarios.AsNoTracking()
-                .Include(u => u.Servico).SingleOrDefaultAsync(u => u.Id == id);
+                .Include(u => u.Servico)
+                .SingleOrDefaultAsync(u => u.Id == id);
+        }
+
+        public async Task<Usuario> ObterUsuarioCompletoPorId(Guid id)
+        {
+            return await _context.Usuarios.AsNoTracking()
+                .Include(u => u.Servico)
+                .Include(u => u.Solicitacoes)
+                .ThenInclude(s => s.Detalhes)
+                .Include(u => u.Solicitacoes)
+                .ThenInclude(s => s.Servico)
+                .Include(u => u.Solicitacoes)
+                .ThenInclude(s => s.Mensagens)
+                .Include(u => u.Empresas)
+                .ThenInclude(e => e.Servico)
+                .SingleOrDefaultAsync(u => u.Id == id);
         }
         public async Task<Usuario> ObterUsuarioPorIdComEmpresaes(Guid id)
         {

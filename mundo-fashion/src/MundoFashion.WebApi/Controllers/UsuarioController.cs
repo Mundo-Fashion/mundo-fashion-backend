@@ -37,7 +37,7 @@ namespace MundoFashion.WebApi.Controllers
         [AllowAnonymous]
         public async Task<ActionResult<string>> CriarUsuario(UsuarioModel usuario)
         {
-            await _usuarioServices.CriarUsuario(usuario.Nome, usuario.Email, usuario.Password)
+            await _usuarioServices.CriarUsuario(usuario.Nome, usuario.Email, usuario.Senha)
                                   .ConfigureAwait(false);
 
             return RespostaCustomizada("Usuário criado");
@@ -56,10 +56,15 @@ namespace MundoFashion.WebApi.Controllers
 
         [HttpPost]
         [Route("criar-servico-usuario")]
-        [AllowAnonymous]
-        public async Task<ActionResult<string>> CriarServicoUsuario(ServicoEstampaModel servico)
+        public async Task<ActionResult<string>> CriarServicoUsuario([FromForm]ServicoEstampaModel servico)
         {
             ServicoEstampa novoServico = _mapper.Map<ServicoEstampa>(servico);
+
+            foreach (IFormFile imagem in servico.ImagensUpload)
+            {
+                string nomeImagem = $"{Guid.NewGuid()}_{imagem.FileName}";
+                novoServico.AdicionarImagem(await _cloudStorage.UploadFileAsync(imagem, nomeImagem).ConfigureAwait(false));
+            }
 
             await _usuarioServices.CriarServicoUsuario(UsuarioId, novoServico)
                                   .ConfigureAwait(false);
@@ -69,9 +74,10 @@ namespace MundoFashion.WebApi.Controllers
 
         [HttpGet]
         [Route("obter-usuario/{id:guid}")]
+        [AllowAnonymous]
         public async Task<ActionResult<UsuarioModel>> ObterUsuario(Guid id)
         {
-            return _mapper.Map<UsuarioModel>(await _usuarioRepository.ObterUsuarioPorId(id).ConfigureAwait(false));
+            return _mapper.Map<UsuarioModel>(await _usuarioRepository.ObterUsuarioCompletoPorId(id).ConfigureAwait(false));
         }
 
         [HttpPut]
@@ -99,7 +105,7 @@ namespace MundoFashion.WebApi.Controllers
 
         [HttpPost]
         [Route("criar-solicitacao-usuario")]
-        public async Task<ActionResult<string>> CriarSolicitacaoUsuario(SolicitacaoModel solicitacao)
+        public async Task<ActionResult<string>> CriarSolicitacaoUsuario([FromForm]SolicitacaoModel solicitacao)
         {
             Solicitacao novaSolicitacao = _mapper.Map<Solicitacao>(solicitacao);
 
@@ -115,18 +121,15 @@ namespace MundoFashion.WebApi.Controllers
             return RespostaCustomizada("Solicitação criada com sucesso.");
         }
 
+        [HttpPut]
+        [Route("atualizar-usuario")]
+        public async Task<ActionResult<string>> AtualizarUsuario(UsuarioModel usuario)
+        {
+            Usuario usuarioAtualizado = _mapper.Map<Usuario>(usuario);
 
-        //[HttpPut]
-        //[Route("atualizar-solicitacao-usuario/{solicitacaoId:guid}")]
-        //[Authorize]
-        //public async Task<ActionResult<string>> AtualizarSolicitacaoUsuario(Guid solicitacaoId, SolicitacaoModel solicitacao)
-        //{
-        //    Solicitacao solicitacaoAtualizada = _mapper.Map<Solicitacao>(solicitacao);
+            await _usuarioServices.AtualizarUsuario(UsuarioId, usuarioAtualizado);
 
-        //    await _usuarioServices.AtualizarSolicitacaoUsuario(UsuarioId, solicitacaoAtualizada)
-        //                          .ConfigureAwait(false);
-
-        //    return RespostaCustomizada("Solicitação atualizada com sucesso.");
-        //}
+            return RespostaCustomizada("Usuário atualizado.");
+        }
     }
 }
