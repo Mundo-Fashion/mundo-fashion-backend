@@ -8,13 +8,15 @@ namespace MundoFashion.Domain.Validacoes
         {
             RuleFor(u => u.Email)
                 .NotEmpty()
-                .EmailAddress();
+                .EmailAddress()
+                .When(x => string.IsNullOrWhiteSpace(x.Email));
 
             RuleFor(u => u.Nome)
                 .NotEmpty();
 
             RuleFor(u => u.Password)
-                .NotEmpty();
+                .NotEmpty()
+                .When(x => string.IsNullOrWhiteSpace(x.Password));
 
             RuleFor(u => u.Role)
                 .NotEmpty();

@@ -11,7 +11,10 @@ namespace MundoFashion.Domain
     {
         private readonly List<Mensagem> _mensagens;
 
-        private Solicitacao() { }
+        private Solicitacao()
+        {
+            _mensagens = new List<Mensagem>();
+        }
         public Solicitacao(DetalhesSolicitacao detalhes)
         {
             Status = StatusSolicitacao.Solicitado;

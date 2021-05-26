@@ -21,11 +21,16 @@ namespace MundoFashion.Domain
         public ServicoEstampa Servico { get; private set; }
         public Guid ServicoId { get; private set; }
         public IReadOnlyCollection<Solicitacao> Solicitacoes => _solicitacoes.AsReadOnly();
-        public Usuario(string nome, string email, string password, string role)
+
+        private Usuario()
+        {
+            _solicitacoes = new List<Solicitacao>();
+        }
+        public Usuario(string nome, string email, string senha, string role)
         {
             Nome = nome;
             Email = email;
-            Password = password;
+            Password = senha;
             Role = role;
             _empresas = new List<Empresa>();
             _solicitacoes = new List<Solicitacao>();
@@ -39,6 +44,8 @@ namespace MundoFashion.Domain
 
         public void SetarCpf(string cpf)
         {
+            if (string.IsNullOrWhiteSpace(cpf) || Cpf == cpf) return;
+
             AlterarRole(Roles.CLIENTE_PRESTADOR);
             Cpf = cpf;
         }
@@ -59,6 +66,8 @@ namespace MundoFashion.Domain
 
         public void AtualizarServico(ServicoEstampa servico)
         {
+            if (Servico == servico || servico is null) return;
+
             Servico.AtualizarTipoEstampa(servico.TipoEstampa);
             Servico.AtualizarTipoTecnicaEstampa(servico.Tecnica);
             Servico.AtualizarTipoTecnicaEstamparia(servico.TecnicaEstamparia);
@@ -80,10 +89,5 @@ namespace MundoFashion.Domain
 
         public bool PossuiServico()
             => !ServicoId.Equals(Guid.Empty);
-
-        public void AtualizarSolicitacao(Solicitacao solicitacao)
-        {
-            throw new NotImplementedException();
-        }
     }
 }

@@ -29,8 +29,8 @@ namespace MundoFashion.WebApi.Controllers
         }
 
         [HttpPost]
-        [Route("criar-solicitacao-empresa")]
-        public async Task<ActionResult<string>> CriarSolicitacaoEmpresa([FromForm] SolicitacaoModel solicitacao)
+        [Route("criar-solicitacao-empresa/{empresaId:guid}")]
+        public async Task<ActionResult<string>> CriarSolicitacaoEmpresa(Guid empresaId, [FromForm] SolicitacaoModel solicitacao)
         {
             Solicitacao novaSolicitacao = _mapper.Map<Solicitacao>(solicitacao);
 
@@ -40,7 +40,7 @@ namespace MundoFashion.WebApi.Controllers
                 novaSolicitacao.Detalhes.AdicionarImagem(await _cloudStorage.UploadFileAsync(imagem, nomeImagem).ConfigureAwait(false));
             }
 
-            await _empresaServices.AdicionarSolicitacaoEmpresa(solicitacao.EmpresaId.GetValueOrDefault(), novaSolicitacao)
+            await _empresaServices.AdicionarSolicitacaoEmpresa(empresaId, novaSolicitacao)
                                    .ConfigureAwait(false);
 
             return RespostaCustomizada("Solicitação criada com sucesso.");

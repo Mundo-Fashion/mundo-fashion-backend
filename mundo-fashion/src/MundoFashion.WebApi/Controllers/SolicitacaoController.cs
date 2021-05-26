@@ -106,7 +106,7 @@ namespace MundoFashion.WebApi.Controllers
         {
             Mensagem novaMensagem = _mapper.Map<Mensagem>(mensagem);
 
-            await _solicitacaoServices.AdicionarMensagem(mensagem.solicitacaoId, novaMensagem).ConfigureAwait(false);
+            await _solicitacaoServices.AdicionarMensagem(mensagem.SolicitacaoId, novaMensagem).ConfigureAwait(false);
 
             return RespostaCustomizada("Mensagem adicionada com sucesso.");
         }

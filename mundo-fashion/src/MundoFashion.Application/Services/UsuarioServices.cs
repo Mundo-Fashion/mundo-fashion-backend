@@ -90,7 +90,7 @@ namespace MundoFashion.Application.Services
         {
             Usuario usuario = await _usuarioRepository.ObterUsuarioPorId(usuarioId);
 
-            if(usuario is null)
+            if (usuario is null)
             {
                 Notificar("Usuário não encontrado na base de dados.");
                 return;
@@ -118,6 +118,25 @@ namespace MundoFashion.Application.Services
             usuario.AdicionarSolicitacao(solicitacao);
 
             _usuarioRepository.AdicionarSolicitacao(solicitacao);
+            _usuarioRepository.AtualizarUsuario(usuario);
+
+            await _usuarioRepository.Commit().ConfigureAwait(false);
+        }
+
+        public async Task AtualizarUsuario(Guid usuarioId, Usuario usuarioAtualizado)
+        {
+            if (!Validar<Usuario, UsuarioValidator>(usuarioAtualizado)) return;
+
+            Usuario usuario = await _usuarioRepository.ObterUsuarioPorId(usuarioId);
+
+            if (usuario is null)
+            {
+                Notificar("Usuário não encontrado na base de dados.");
+                return;
+            }
+
+            usuario.SetarCpf(usuarioAtualizado.Cpf);
+
             _usuarioRepository.AtualizarUsuario(usuario);
 
             await _usuarioRepository.Commit().ConfigureAwait(false);
