@@ -35,12 +35,12 @@ namespace MundoFashion.WebApi.Controllers
         [HttpGet]
         [Route("obter-solicitacoes-prestador/{prestadorId:guid}")]
         public async Task<ActionResult<List<SolicitacaoModel>>> ObterSolicitacoesPorPrestador(Guid prestadorId)
-            => _mapper.Map<List<SolicitacaoModel>>(await _solicitacaoRepository.ObterSolicitacoes(s => s.Servico.PrestadorId == prestadorId));
+            => RespostaCustomizada(_mapper.Map<List<SolicitacaoModel>>(await _solicitacaoRepository.ObterSolicitacoes(s => s.Servico.PrestadorId == prestadorId)));
 
         [HttpGet]
         [Route("obter-solicitacoes-tomador/{tomadorId:guid}")]
         public async Task<ActionResult<List<SolicitacaoModel>>> ObterSolicitacoesPorTomador(Guid tomadorId)
-        => _mapper.Map<List<SolicitacaoModel>>(await _solicitacaoRepository.ObterSolicitacoes(s => s.TomadorId == tomadorId));
+            => RespostaCustomizada(_mapper.Map<List<SolicitacaoModel>>(await _solicitacaoRepository.ObterSolicitacoes(s => s.TomadorId == tomadorId)));
 
         [HttpPost]
         [Route("criar-solicitacao")]
