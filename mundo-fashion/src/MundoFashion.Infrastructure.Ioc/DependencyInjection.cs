@@ -5,6 +5,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using MundoFashion.Application.Services;
+using MundoFashion.Application.Services.Base;
 using MundoFashion.Core.Notifications;
 using MundoFashion.Core.Notifications.Handlers;
 using MundoFashion.Core.Storage;
@@ -45,7 +46,6 @@ namespace MundoFashion.Infrastructure.Ioc
         private static void AdicionarRepositories(IServiceCollection services)
         {
             services.AddScoped<IUsuarioRepository, UsuarioRepository>();
-            services.AddScoped<IEmpresaRepository, EmpresaRepository>();
             services.AddScoped<ISolicitacaoRepository, SolicitacaoRepository>();
             services.AddScoped<IServicoRepository, ServicoRepository>();
         }
@@ -55,7 +55,6 @@ namespace MundoFashion.Infrastructure.Ioc
             services.AddScoped<UsuarioServices>();
             services.AddScoped<AutenticacaoServices>();
             services.AddScoped<SolicitacaoServices>();
-            services.AddScoped<EmpresaServices>();
         }
 
         private static void AdicionarMediatR(IServiceCollection services, Assembly aplicacaoAssembly)

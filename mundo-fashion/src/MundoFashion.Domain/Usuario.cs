@@ -9,7 +9,6 @@ namespace MundoFashion.Domain
 {
     public class Usuario : Entity, IAggregateRoot
     {
-        private readonly List<Empresa> _empresas;
         private readonly List<Solicitacao> _solicitacoes;
 
         public string Nome { get; private set; }
@@ -17,7 +16,6 @@ namespace MundoFashion.Domain
         public string Password { get; private set; }
         public string Role { get; private set; }
         public string Cpf { get; private set; }
-        public IReadOnlyCollection<Empresa> Empresas => _empresas.AsReadOnly();
         public ServicoEstampa Servico { get; private set; }
         public Guid ServicoId { get; private set; }
         public IReadOnlyCollection<Solicitacao> Solicitacoes => _solicitacoes.AsReadOnly();
@@ -26,20 +24,14 @@ namespace MundoFashion.Domain
         {
             _solicitacoes = new List<Solicitacao>();
         }
-        public Usuario(string nome, string email, string senha, string role)
+        public Usuario(string nome, string cpf, string email, string senha, string role)
         {
             Nome = nome;
+            Cpf = cpf;
             Email = email;
             Password = senha;
             Role = role;
-            _empresas = new List<Empresa>();
             _solicitacoes = new List<Solicitacao>();
-        }
-
-        public void AdicionarSolicitacao(Solicitacao solicitacao)
-        {
-            solicitacao.AssociarUsuario(Id);
-            _solicitacoes.Add(solicitacao);
         }
 
         public void SetarCpf(string cpf)
@@ -50,18 +42,11 @@ namespace MundoFashion.Domain
             Cpf = cpf;
         }
 
-        public void AdicionarEmpresa(Empresa empresa)
-        {
-            empresa.AssociarUsuario(Id);
-            AlterarRole(Roles.CLIENTE_PRESTADOR);
-            _empresas.Add(empresa);
-        }
-
         public void AdicionarServico(ServicoEstampa servico)
         {
             AlterarRole(Roles.CLIENTE_PRESTADOR);
             ServicoId = servico.Id;
-            servico.AssociarUsuario(Id);
+            servico.AssociarUsuarioPrestador(Id);
         }
 
         public void AtualizarServico(ServicoEstampa servico)

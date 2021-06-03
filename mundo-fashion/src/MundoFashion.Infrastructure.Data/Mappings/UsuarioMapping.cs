@@ -10,17 +10,14 @@ namespace MundoFashion.Infrastructure.Data.Mappings
         public void Configure(EntityTypeBuilder<Usuario> builder)
         {
             builder.HasKey(u => u.Id);
-            builder.HasMany(u => u.Empresas)
-                .WithOne(e => e.Usuario)
-                .HasForeignKey(u => u.UsuarioId);
 
             builder.HasOne(u => u.Servico)
-                .WithOne(s => s.Usuario)
-                .HasForeignKey<ServicoEstampa>(x => x.UsuarioId);
+                .WithOne(s => s.Prestador)
+                .HasForeignKey<ServicoEstampa>(x => x.PrestadorId);
 
             builder.HasMany(u => u.Solicitacoes)
-                .WithOne(s => s.Usuario)
-                .HasForeignKey(s => s.UsuarioId);
+                .WithOne(s => s.Tomador)
+                .HasForeignKey(s => s.TomadorId);
 
             builder.ToTable("Usuarios");
         }

@@ -7,16 +7,16 @@ using MundoFashion.Application.Services;
 using MundoFashion.Core.Constants;
 using MundoFashion.Core.Notifications;
 using MundoFashion.Core.Storage;
-using MundoFashion.Domain;
 using MundoFashion.Domain.Repositories;
 using MundoFashion.Domain.Servicos;
 using MundoFashion.WebApi.Controllers.Base;
 using MundoFashion.WebApi.Models;
+using MundoFashion.WebApi.Models.Usuario;
 using System;
 using System.Threading.Tasks;
 
 namespace MundoFashion.WebApi.Controllers
-{   
+{
     [Authorize]
     public class UsuarioController : ApiControllerBase
     {
@@ -37,28 +37,21 @@ namespace MundoFashion.WebApi.Controllers
         [AllowAnonymous]
         public async Task<ActionResult<string>> CriarUsuario(UsuarioModel usuario)
         {
-            await _usuarioServices.CriarUsuario(usuario.Nome, usuario.Email, usuario.Senha)
+            await _usuarioServices.CriarUsuario(usuario.Nome, usuario.Cpf, usuario.Email, usuario.Senha)
                                   .ConfigureAwait(false);
 
             return RespostaCustomizada("Usuário criado");
-        }
-
-        [HttpPost]
-        [Route("criar-empresa")]
-        [Authorize(Roles = Roles.CLIENTE)]
-        public async Task<ActionResult<string>> CriarEmpresa(EmpresaModel empresa)
-        {
-            await _usuarioServices.CriarEmpresa(UsuarioId, new Empresa(empresa.Nome, empresa.Cnpj))
-                                  .ConfigureAwait(false); 
-
-            return RespostaCustomizada($"Empresa '{empresa.Nome}' criada.");
-        }
+        }       
 
         [HttpPost]
         [Route("criar-servico-usuario")]
-        public async Task<ActionResult<string>> CriarServicoUsuario([FromForm]ServicoEstampaModel servico)
+        public async Task<ActionResult<string>> CriarServicoUsuario([FromForm] ServicoEstampaModel servico)
         {
-            ServicoEstampa novoServico = _mapper.Map<ServicoEstampa>(servico);
+            ServicoEstampa novoServico = new ServicoEstampa(servico.TipoEstampa,
+                                                            servico.TipoTecnica,
+                                                            servico.TipoTecnicaEstamparia,
+                                                            servico.TipoNicho,
+                                                            servico.TipoRapport);
 
             foreach (IFormFile imagem in servico.ImagensUpload)
             {
@@ -83,7 +76,7 @@ namespace MundoFashion.WebApi.Controllers
         [HttpPut]
         [Route("atualizar-servico-usuario")]
         [Authorize(Roles = Roles.CLIENTE_PRESTADOR)]
-        public async Task<ActionResult<string>> AtualizarServicoUsuario([FromBody]ServicoEstampaModel servico)
+        public async Task<ActionResult<string>> AtualizarServicoUsuario([FromBody] ServicoEstampaModel servico)
         {
             ServicoEstampa servicoAtualizado = _mapper.Map<ServicoEstampa>(servico);
 
@@ -101,35 +94,6 @@ namespace MundoFashion.WebApi.Controllers
                                   .ConfigureAwait(false);
 
             return RespostaCustomizada("Serviço removido com sucesso.");
-        }
-
-        [HttpPost]
-        [Route("criar-solicitacao-usuario")]
-        public async Task<ActionResult<string>> CriarSolicitacaoUsuario([FromForm]SolicitacaoModel solicitacao)
-        {
-            Solicitacao novaSolicitacao = _mapper.Map<Solicitacao>(solicitacao);
-
-            foreach (IFormFile imagem in solicitacao.Detalhes.ImagensUpload)
-            {
-                string nomeImagem = $"{Guid.NewGuid()}_{imagem.FileName}";
-                novaSolicitacao.Detalhes.AdicionarImagem(await _cloudStorage.UploadFileAsync(imagem, nomeImagem).ConfigureAwait(false));
-            }
-
-            await _usuarioServices.AdicionarSolicitacaoUsuario(UsuarioId, novaSolicitacao)
-                                  .ConfigureAwait(false);
-
-            return RespostaCustomizada("Solicitação criada com sucesso.");
-        }
-
-        [HttpPut]
-        [Route("atualizar-usuario")]
-        public async Task<ActionResult<string>> AtualizarUsuario(UsuarioModel usuario)
-        {
-            Usuario usuarioAtualizado = _mapper.Map<Usuario>(usuario);
-
-            await _usuarioServices.AtualizarUsuario(UsuarioId, usuarioAtualizado);
-
-            return RespostaCustomizada("Usuário atualizado.");
-        }
+        }        
     }
 }

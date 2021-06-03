@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using MundoFashion.Infrastructure.Data;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
@@ -9,9 +10,10 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace MundoFashion.Infrastructure.Data.Migrations
 {
     [DbContext(typeof(MundoFashionContext))]
-    partial class MundoFashionContextModelSnapshot : ModelSnapshot
+    [Migration("20210602233534_RemovidoEmpresa")]
+    partial class RemovidoEmpresa
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -132,9 +134,6 @@ namespace MundoFashion.Infrastructure.Data.Migrations
                     b.Property<int>("Nicho")
                         .HasColumnType("integer");
 
-                    b.Property<Guid>("PrestadorId")
-                        .HasColumnType("uuid");
-
                     b.Property<int>("Tecnica")
                         .HasColumnType("integer");
 
@@ -147,9 +146,12 @@ namespace MundoFashion.Infrastructure.Data.Migrations
                     b.Property<int>("TipoRapport")
                         .HasColumnType("integer");
 
+                    b.Property<Guid>("UsuarioId")
+                        .HasColumnType("uuid");
+
                     b.HasKey("Id");
 
-                    b.HasIndex("PrestadorId")
+                    b.HasIndex("UsuarioId")
                         .IsUnique();
 
                     b.ToTable("Servicos");
@@ -179,14 +181,14 @@ namespace MundoFashion.Infrastructure.Data.Migrations
                     b.Property<int>("Status")
                         .HasColumnType("integer");
 
-                    b.Property<Guid>("TomadorId")
+                    b.Property<Guid?>("UsuarioId")
                         .HasColumnType("uuid");
 
                     b.HasKey("Id");
 
                     b.HasIndex("ServicoId");
 
-                    b.HasIndex("TomadorId");
+                    b.HasIndex("UsuarioId");
 
                     b.ToTable("Solicitacoes");
                 });
@@ -258,13 +260,13 @@ namespace MundoFashion.Infrastructure.Data.Migrations
 
             modelBuilder.Entity("MundoFashion.Domain.Servicos.ServicoEstampa", b =>
                 {
-                    b.HasOne("MundoFashion.Domain.Usuario", "Prestador")
+                    b.HasOne("MundoFashion.Domain.Usuario", "Usuario")
                         .WithOne("Servico")
-                        .HasForeignKey("MundoFashion.Domain.Servicos.ServicoEstampa", "PrestadorId")
+                        .HasForeignKey("MundoFashion.Domain.Servicos.ServicoEstampa", "UsuarioId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Prestador");
+                    b.Navigation("Usuario");
                 });
 
             modelBuilder.Entity("MundoFashion.Domain.Solicitacao", b =>
@@ -275,15 +277,13 @@ namespace MundoFashion.Infrastructure.Data.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("MundoFashion.Domain.Usuario", "Tomador")
+                    b.HasOne("MundoFashion.Domain.Usuario", "Usuario")
                         .WithMany("Solicitacoes")
-                        .HasForeignKey("TomadorId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("UsuarioId");
 
                     b.Navigation("Servico");
 
-                    b.Navigation("Tomador");
+                    b.Navigation("Usuario");
                 });
 
             modelBuilder.Entity("MundoFashion.Domain.Solicitacao", b =>

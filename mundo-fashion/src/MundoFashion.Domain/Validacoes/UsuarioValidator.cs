@@ -20,6 +20,9 @@ namespace MundoFashion.Domain.Validacoes
 
             RuleFor(u => u.Role)
                 .NotEmpty();
+
+            RuleFor(u => u.Cpf)
+                .NotEmpty();    
         }
     }
 }

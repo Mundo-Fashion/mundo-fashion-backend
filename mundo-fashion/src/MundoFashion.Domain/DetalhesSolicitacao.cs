@@ -10,6 +10,17 @@ namespace MundoFashion.Domain
         private readonly List<string> _imagens;
 
         private DetalhesSolicitacao() { }
+
+        public DetalhesSolicitacao(int tipoEstampa = 0,
+                    int tecnica = 0,
+                    int tecnicaEstamparia = 0,
+                    int nicho = 0,
+                    int tipoRapport = 0,
+                    string observacoes = "") :
+                    this((TipoEstampa)tipoEstampa, (TipoTecnicaEstampa)tecnica, (TipoTecnicaEstamparia)tecnicaEstamparia,
+                    (TipoNicho)nicho, (TipoRapport)tipoRapport, observacoes)
+        { }
+
         public DetalhesSolicitacao(TipoEstampa tipoEstampa = 0,
             TipoTecnicaEstampa tecnica = 0,
             TipoTecnicaEstamparia tecnicaEstamparia = 0,

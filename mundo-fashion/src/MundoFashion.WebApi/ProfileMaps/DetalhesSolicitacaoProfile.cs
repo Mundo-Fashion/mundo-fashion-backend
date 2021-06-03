@@ -1,7 +1,6 @@
 ﻿using AutoMapper;
 using MundoFashion.Domain;
 using MundoFashion.WebApi.Models;
-using System.Linq;
 
 namespace MundoFashion.WebApi.ProfileMaps
 {

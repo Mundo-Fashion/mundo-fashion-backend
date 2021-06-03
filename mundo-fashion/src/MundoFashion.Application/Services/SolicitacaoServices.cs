@@ -16,6 +16,17 @@ namespace MundoFashion.Application.Services
             _solicitacaoRepository = solicitacaoRepository;
         }
 
+        public async Task AdicionarSolicitacao(Solicitacao solicitacao, DetalhesSolicitacao detalhesSolicitacao)
+        {
+            if(!Validar<Solicitacao, SolicitacaoValidator>(solicitacao)) return;
+            if(!Validar<DetalhesSolicitacao, DetalhesSolicitacaoValidator>(detalhesSolicitacao)) return;
+
+            _solicitacaoRepository.AdicionarSolicitacao(solicitacao);
+            _solicitacaoRepository.AdicionarDetalhesSolicitacao(detalhesSolicitacao);
+
+            await _solicitacaoRepository.Commit().ConfigureAwait(false);
+        }
+
         public async Task CancelarSolicitacao(Guid solicitacaoId)
         {
             Solicitacao solicitacao = await _solicitacaoRepository.ObterSolicitacaoPorId(solicitacaoId).ConfigureAwait(false);

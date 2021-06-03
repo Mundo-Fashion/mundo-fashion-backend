@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using MundoFashion.Infrastructure.Data;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
@@ -9,9 +10,10 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace MundoFashion.Infrastructure.Data.Migrations
 {
     [DbContext(typeof(MundoFashionContext))]
-    partial class MundoFashionContextModelSnapshot : ModelSnapshot
+    [Migration("20210603001130_AlteradoNomeCampos")]
+    partial class AlteradoNomeCampos
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -179,7 +181,7 @@ namespace MundoFashion.Infrastructure.Data.Migrations
                     b.Property<int>("Status")
                         .HasColumnType("integer");
 
-                    b.Property<Guid>("TomadorId")
+                    b.Property<Guid?>("TomadorId")
                         .HasColumnType("uuid");
 
                     b.HasKey("Id");
@@ -277,9 +279,7 @@ namespace MundoFashion.Infrastructure.Data.Migrations
 
                     b.HasOne("MundoFashion.Domain.Usuario", "Tomador")
                         .WithMany("Solicitacoes")
-                        .HasForeignKey("TomadorId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("TomadorId");
 
                     b.Navigation("Servico");
 

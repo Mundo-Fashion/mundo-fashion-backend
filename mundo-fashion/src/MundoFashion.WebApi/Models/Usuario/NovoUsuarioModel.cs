@@ -1,7 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using MundoFashion.WebApi.Models.Solicitacao;
 
-namespace MundoFashion.WebApi.Models
+namespace MundoFashion.WebApi.Models.Usuario
 {
     public record UsuarioModel
     {
@@ -11,7 +12,6 @@ namespace MundoFashion.WebApi.Models
         public string Senha { get; set; }
         public string Role { get; set; }
         public string Cpf { get; set; }
-        public List<EmpresaModel> Empresas { get; set; }
         public List<SolicitacaoModel> Solicitacoes { get; set; }
         public ServicoEstampaModel Servico { get; set; }
         public DateTime CreatedAt { get; set; }
