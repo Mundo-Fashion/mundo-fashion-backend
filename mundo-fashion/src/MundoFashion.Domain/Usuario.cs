@@ -9,8 +9,6 @@ namespace MundoFashion.Domain
 {
     public class Usuario : Entity, IAggregateRoot
     {
-        private readonly List<Solicitacao> _solicitacoes;
-
         public string Nome { get; private set; }
         public string Email { get; private set; }
         public string Password { get; private set; }
@@ -18,12 +16,8 @@ namespace MundoFashion.Domain
         public string Cpf { get; private set; }
         public ServicoEstampa Servico { get; private set; }
         public Guid ServicoId { get; private set; }
-        public IReadOnlyCollection<Solicitacao> Solicitacoes => _solicitacoes.AsReadOnly();
 
-        private Usuario()
-        {
-            _solicitacoes = new List<Solicitacao>();
-        }
+        private Usuario() { }
         public Usuario(string nome, string cpf, string email, string senha, string role)
         {
             Nome = nome;
@@ -31,7 +25,6 @@ namespace MundoFashion.Domain
             Email = email;
             Password = senha;
             Role = role;
-            _solicitacoes = new List<Solicitacao>();
         }
 
         public void SetarCpf(string cpf)

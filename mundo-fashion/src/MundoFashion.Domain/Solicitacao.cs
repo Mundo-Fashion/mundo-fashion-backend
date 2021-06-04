@@ -55,7 +55,10 @@ namespace MundoFashion.Domain
             => !PropostaId.Equals(Guid.Empty);
 
         public void AtualizarValorProposta(double valorProposta)
-            => Proposta?.AtualizarValor(valorProposta);
+        {
+            Proposta?.AtualizarValor(valorProposta);
+            AnalisarProposta();
+        }
 
         public void IniciarNegociacao()
            => Status = StatusSolicitacao.EmNegociacao;
@@ -72,7 +75,19 @@ namespace MundoFashion.Domain
         public void Entregue()
            => Status = StatusSolicitacao.Entregue;
 
+        public void AnalisarProposta()
+           => Status = StatusSolicitacao.AnalisandoProposta;   
+           
+        public void Finalizar()
+           => Status = StatusSolicitacao.Finalizado;
+
         public void AceitarSolicitacao()
             => Aceita = true;
+
+        public void RecusarSolicitacao()
+        {
+            Aceita = false;
+            Cancelar();
+        }            
     }
 }

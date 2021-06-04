@@ -26,29 +26,6 @@ namespace MundoFashion.Infrastructure.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Empresas",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(type: "uuid", nullable: false),
-                    Nome = table.Column<string>(type: "text", nullable: true),
-                    Cnpj = table.Column<string>(type: "text", nullable: true),
-                    UsuarioId = table.Column<Guid>(type: "uuid", nullable: false),
-                    ServicoId = table.Column<Guid>(type: "uuid", nullable: false),
-                    CreatedAt = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
-                    Active = table.Column<bool>(type: "boolean", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Empresas", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Empresas_Usuarios_UsuarioId",
-                        column: x => x.UsuarioId,
-                        principalTable: "Usuarios",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Servicos",
                 columns: table => new
                 {
@@ -61,24 +38,17 @@ namespace MundoFashion.Infrastructure.Data.Migrations
                     CreatedAt = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
                     Active = table.Column<bool>(type: "boolean", nullable: false),
                     Imagens = table.Column<string[]>(type: "text[]", nullable: true),
-                    UsuarioId = table.Column<Guid>(type: "uuid", nullable: true),
-                    EmpresaId = table.Column<Guid>(type: "uuid", nullable: true)
+                    PrestadorId = table.Column<Guid>(type: "uuid", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Servicos", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Servicos_Empresas_EmpresaId",
-                        column: x => x.EmpresaId,
-                        principalTable: "Empresas",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_Servicos_Usuarios_UsuarioId",
-                        column: x => x.UsuarioId,
+                        name: "FK_Servicos_Usuarios_PrestadorId",
+                        column: x => x.PrestadorId,
                         principalTable: "Usuarios",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -90,8 +60,7 @@ namespace MundoFashion.Infrastructure.Data.Migrations
                     Aceita = table.Column<bool>(type: "boolean", nullable: false),
                     DetalhesId = table.Column<Guid>(type: "uuid", nullable: false),
                     PropostaId = table.Column<Guid>(type: "uuid", nullable: true),
-                    UsuarioId = table.Column<Guid>(type: "uuid", nullable: true),
-                    EmpresaId = table.Column<Guid>(type: "uuid", nullable: true),
+                    TomadorId = table.Column<Guid>(type: "uuid", nullable: false),
                     ServicoId = table.Column<Guid>(type: "uuid", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "timestamp without time zone", nullable: false)
                 },
@@ -99,23 +68,17 @@ namespace MundoFashion.Infrastructure.Data.Migrations
                 {
                     table.PrimaryKey("PK_Solicitacoes", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Solicitacoes_Empresas_EmpresaId",
-                        column: x => x.EmpresaId,
-                        principalTable: "Empresas",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
                         name: "FK_Solicitacoes_Servicos_ServicoId",
                         column: x => x.ServicoId,
                         principalTable: "Servicos",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_Solicitacoes_Usuarios_UsuarioId",
-                        column: x => x.UsuarioId,
+                        name: "FK_Solicitacoes_Usuarios_TomadorId",
+                        column: x => x.TomadorId,
                         principalTable: "Usuarios",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -194,11 +157,6 @@ namespace MundoFashion.Infrastructure.Data.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_Empresas_UsuarioId",
-                table: "Empresas",
-                column: "UsuarioId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_MensagensSolicitacao_SolicitacaoId",
                 table: "MensagensSolicitacao",
                 column: "SolicitacaoId");
@@ -210,21 +168,10 @@ namespace MundoFashion.Infrastructure.Data.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_Servicos_EmpresaId",
+                name: "IX_Servicos_PrestadorId",
                 table: "Servicos",
-                column: "EmpresaId",
+                column: "PrestadorId",
                 unique: true);
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Servicos_UsuarioId",
-                table: "Servicos",
-                column: "UsuarioId",
-                unique: true);
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Solicitacoes_EmpresaId",
-                table: "Solicitacoes",
-                column: "EmpresaId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Solicitacoes_ServicoId",
@@ -232,9 +179,9 @@ namespace MundoFashion.Infrastructure.Data.Migrations
                 column: "ServicoId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Solicitacoes_UsuarioId",
+                name: "IX_Solicitacoes_TomadorId",
                 table: "Solicitacoes",
-                column: "UsuarioId");
+                column: "TomadorId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -253,9 +200,6 @@ namespace MundoFashion.Infrastructure.Data.Migrations
 
             migrationBuilder.DropTable(
                 name: "Servicos");
-
-            migrationBuilder.DropTable(
-                name: "Empresas");
 
             migrationBuilder.DropTable(
                 name: "Usuarios");

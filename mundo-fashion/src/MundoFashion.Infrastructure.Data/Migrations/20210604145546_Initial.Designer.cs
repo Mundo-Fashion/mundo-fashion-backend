@@ -10,8 +10,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace MundoFashion.Infrastructure.Data.Migrations
 {
     [DbContext(typeof(MundoFashionContext))]
-    [Migration("20210603012729_FinalMigration")]
-    partial class FinalMigration
+    [Migration("20210604145546_Initial")]
+    partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -278,7 +278,7 @@ namespace MundoFashion.Infrastructure.Data.Migrations
                         .IsRequired();
 
                     b.HasOne("MundoFashion.Domain.Usuario", "Tomador")
-                        .WithMany("Solicitacoes")
+                        .WithMany()
                         .HasForeignKey("TomadorId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -300,8 +300,6 @@ namespace MundoFashion.Infrastructure.Data.Migrations
             modelBuilder.Entity("MundoFashion.Domain.Usuario", b =>
                 {
                     b.Navigation("Servico");
-
-                    b.Navigation("Solicitacoes");
                 });
 #pragma warning restore 612, 618
         }

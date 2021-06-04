@@ -89,44 +89,5 @@ namespace MundoFashion.Application.Services
             _usuarioRepository.AtualizarServico(usuario.Servico);
             await _usuarioRepository.Commit().ConfigureAwait(false);
         }
-
-        public async Task TornarUsuarioPrestador(Guid usuarioId, string cpf)
-        {
-            Usuario usuario = await _usuarioRepository.ObterUsuarioPorId(usuarioId);
-
-            if (usuario is null)
-            {
-                Notificar("Usuário não encontrado na base de dados.");
-                return;
-            }
-
-            usuario.SetarCpf(cpf);
-
-            _usuarioRepository.AtualizarUsuario(usuario);
-
-            await _usuarioRepository.Commit().ConfigureAwait(false);
-        }
-
-        //public async Task AtualizarSolicitacaoUsuario(Guid usuarioId, Guid solicitacaoId, Solicitacao solicitacaoAtualizada)
-        //{
-        //    Usuario usuario = await _usuarioRepository.ObterUsuarioPorIdComSolicitacoes(usuarioId).ConfigureAwait(false);
-
-        //    if (usuario is null)
-        //    {
-        //        Notificar("Usuário não encontrado na base de dados.");
-        //        return;
-        //    }
-
-        //    Solicitacao solicitacao = usuario.Solicitacoes.SingleOrDefault(u => u.Id == solicitacaoId);
-
-
-
-        //    usuario.AtualizarSolicitacao(solicitacao);
-
-        //    _usuarioRepository.AtualizarUsuario(usuario);
-        //    _usuarioRepository.AtualizarSolicitacao(solicitacao);
-
-        //    await _usuarioRepository.Commit().ConfigureAwait(false);
-        //}
     }
 }

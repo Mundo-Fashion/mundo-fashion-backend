@@ -276,7 +276,7 @@ namespace MundoFashion.Infrastructure.Data.Migrations
                         .IsRequired();
 
                     b.HasOne("MundoFashion.Domain.Usuario", "Tomador")
-                        .WithMany("Solicitacoes")
+                        .WithMany()
                         .HasForeignKey("TomadorId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -298,8 +298,6 @@ namespace MundoFashion.Infrastructure.Data.Migrations
             modelBuilder.Entity("MundoFashion.Domain.Usuario", b =>
                 {
                     b.Navigation("Servico");
-
-                    b.Navigation("Solicitacoes");
                 });
 #pragma warning restore 612, 618
         }

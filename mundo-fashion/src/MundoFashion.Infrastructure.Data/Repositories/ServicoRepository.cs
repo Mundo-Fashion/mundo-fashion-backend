@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using System.Linq;
+using Microsoft.EntityFrameworkCore;
 using MundoFashion.Core.Extensions.Pagination;
 using MundoFashion.Core.Extensions.Pagination.Models;
 using MundoFashion.Domain.Repositories;
@@ -16,6 +17,6 @@ namespace MundoFashion.Infrastructure.Data.Repositories
         }
 
         public PagedModel<ServicoEstampa> GetByPage(int page, int limit)
-            => _context.Servicos.AsNoTracking().Paginate(page, limit);
+            => _context.Servicos.Where(s => s.Active).AsNoTracking().Paginate(page, limit);
     }
 }

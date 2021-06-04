@@ -37,8 +37,6 @@ namespace MundoFashion.Infrastructure.Data.Repositories
         {
             return await _context.Usuarios.AsNoTracking()
                 .Include(u => u.Servico)
-                .Include(u => u.Solicitacoes)
-                .ThenInclude(s => s.Detalhes)
                 .SingleOrDefaultAsync(u => u.Id == id);
         }
         
