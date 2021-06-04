@@ -10,6 +10,7 @@ using MundoFashion.Domain.Repositories;
 using MundoFashion.WebApi.Controllers.Base;
 using MundoFashion.WebApi.Models;
 using MundoFashion.WebApi.Models.Solicitacao;
+using MundoFashion.WebApi.Models.Mensagem;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -74,12 +75,12 @@ namespace MundoFashion.WebApi.Controllers
         }
 
         [HttpPost]
-        [Route("adicionar-proposta")]
-        public async Task<ActionResult<string>> AdicionarProposta(PropostaModel proposta)
+        [Route("adicionar-proposta/{solicitacaoId:guid}")]
+        public async Task<ActionResult<string>> AdicionarProposta(Guid solicitacaoId, PropostaModel proposta)
         {
-            Proposta novaProposta = _mapper.Map<Proposta>(proposta);
+            Proposta novaProposta = new Proposta(proposta.Valor);
 
-            await _solicitacaoServices.AdicionarProposta(proposta.SolicitacaoId, novaProposta);
+            await _solicitacaoServices.AdicionarProposta(solicitacaoId, novaProposta);
 
             return RespostaCustomizada("Proposta adicionada.");
         }
@@ -93,13 +94,22 @@ namespace MundoFashion.WebApi.Controllers
             return RespostaCustomizada("Proposta aceita.");
         }
 
-        [HttpPost]
-        [Route("atualizar-proposta")]
-        public async Task<ActionResult<string>> AtualizarProposta(PropostaModel proposta)
+        [HttpPut]
+        [Route("recusar-proposta/{solicitacaoId:guid}")]
+        public async Task<ActionResult<string>> RecusarProposta(Guid solicitacaoId)
+        {
+            await _solicitacaoServices.RecusarProposta(solicitacaoId);
+
+            return RespostaCustomizada("Proposta recusada.");
+        }
+
+        [HttpPut]
+        [Route("atualizar-proposta/{solicitacaoId:guid}")]
+        public async Task<ActionResult<string>> AtualizarProposta(Guid solicitacaoId, PropostaModel proposta)
         {
             Proposta propostaAtualizada = _mapper.Map<Proposta>(proposta);
 
-            await _solicitacaoServices.AtualizarProposta(proposta.SolicitacaoId, propostaAtualizada);
+            await _solicitacaoServices.AtualizarProposta(solicitacaoId, propostaAtualizada);
 
             return RespostaCustomizada("Proposta atualizada.");
         }
@@ -114,34 +124,57 @@ namespace MundoFashion.WebApi.Controllers
         }
 
         [HttpPut]
-        [Route("pagar-solicitacao")]
-        public async Task<ActionResult<string>> PagarSolicitacao(Guid solicitacaoId)
+        [Route("recusar-solicitacao/{solicitacaoId:guid}")]
+        public async Task<ActionResult<string>> RecusarSolicitacao(Guid solicitacaoId)
         {
-            Solicitacao solicitacao = await _solicitacaoRepository.ObterSolicitacaoPorId(solicitacaoId).ConfigureAwait(false);
+            await _solicitacaoServices.RecusarSolicitacao(solicitacaoId);
 
-            solicitacao.Pagar();
+            return RespostaCustomizada("Solicitação recusada.");
+        }
+
+        [HttpPut]
+        [Route("pagar-solicitacao/{solicitacaoId:guid}")]
+        public async Task<ActionResult<string>> PagarSolicitacao(Guid solicitacaoId)
+        {            
+            await _solicitacaoServices.PagarSolicitacao(solicitacaoId);
 
             return RespostaCustomizada("Solicitação paga.");
         }
 
         [HttpPut]
-        [Route("cancelar-solicitacao")]
+        [Route("cancelar-solicitacao/{solicitacaoId:guid}")]
         public async Task<ActionResult<string>> CancelarSolicitacao(Guid solicitacaoId)
         {
-            Solicitacao solicitacao = await _solicitacaoRepository.ObterSolicitacaoPorId(solicitacaoId).ConfigureAwait(false);
-
-            solicitacao.Cancelar();
+            await _solicitacaoServices.CancelarSolicitacao(solicitacaoId);
 
             return RespostaCustomizada("Solicitação cancelada.");
+        }
+
+        [HttpPut]
+        [Route("entregar-solicitacao/{solicitacaoId:guid}")]
+        public async Task<ActionResult<string>> EntregarSolicitacao(Guid solicitacaoId)
+        {
+            await _solicitacaoServices.EntregarSolicitacao(solicitacaoId);
+
+            return RespostaCustomizada("Solicitação entregue.");
+        }
+
+        [HttpPut]
+        [Route("finalizar-solicitacao/{solicitacaoId:guid}")]
+        public async Task<ActionResult<string>> FinalizarSolicitacao(Guid solicitacaoId)
+        {
+            await _solicitacaoServices.FinalizarSolicitacao(solicitacaoId);
+
+            return RespostaCustomizada("Solicitação finalizada.");
         }
 
         [HttpPost]
         [Route("adicionar-mensagem-solicitacao")]
         [AllowAnonymous]
 
-        public async Task<ActionResult<string>> AdicionarMensagemSolicitacao(MensagemModel mensagem)
+        public async Task<ActionResult<string>> AdicionarMensagemSolicitacao(NovaMensagemModel mensagem)
         {
-            Mensagem novaMensagem = _mapper.Map<Mensagem>(mensagem);
+            Mensagem novaMensagem = new Mensagem(mensagem.EmissorId, mensagem.ReceptorId, mensagem.Conteudo);
 
             await _solicitacaoServices.AdicionarMensagem(mensagem.SolicitacaoId, novaMensagem).ConfigureAwait(false);
 

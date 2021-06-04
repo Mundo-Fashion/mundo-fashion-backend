@@ -12,7 +12,6 @@ namespace MundoFashion.WebApi.Models.Usuario
         public string Senha { get; set; }
         public string Role { get; set; }
         public string Cpf { get; set; }
-        public List<SolicitacaoModel> Solicitacoes { get; set; }
         public ServicoEstampaModel Servico { get; set; }
         public DateTime CreatedAt { get; set; }
     }
