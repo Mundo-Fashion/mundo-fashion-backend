@@ -26,4 +26,10 @@
   <ItemGroup>
     <Folder Include="Controllers\Base\Responses\" />
   </ItemGroup>
+
+  <Target Name="PrePublishTarget" AfterTargets="Publish">
+    <Exec Command="dotnet tool install dotnet-ef" />
+    <Exec Command="dotnet ef database update --context MundoFashionContext" />
+  </Target>
+
 </Project>
