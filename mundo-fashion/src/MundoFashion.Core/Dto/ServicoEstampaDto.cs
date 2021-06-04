@@ -1,10 +1,4 @@
-﻿using MundoFashion.Core.Enum.Servicos.Estampa;
-using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using MundoFashion.Core.Enums.Servicos.Estampa;
 
 namespace MundoFashion.Core.Dto
 {

@@ -7,16 +7,16 @@
   <ItemGroup>
     <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="8.1.1" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="5.0.5" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="5.0.5" />
     <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="5.0.0" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="5.0.0" />
-    <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="5.0.2" />
+    <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="5.0.6" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\MundoFashion.Application\MundoFashion.Application.csproj" />
     <ProjectReference Include="..\MundoFashion.Core\MundoFashion.Core.csproj" />
     <ProjectReference Include="..\MundoFashion.Infrastructure.Data\MundoFashion.Infrastructure.Data.csproj" />
+    <ProjectReference Include="..\MundoFashion.Infrastructure.Storage\MundoFashion.Infrastructure.Storage.csproj" />
   </ItemGroup>
 
 </Project>

@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-using MundoFashion.Core.Enum.Servicos.Estampa;
 using MundoFashion.Domain.Servicos;
 using MundoFashion.WebApi.Models;
 

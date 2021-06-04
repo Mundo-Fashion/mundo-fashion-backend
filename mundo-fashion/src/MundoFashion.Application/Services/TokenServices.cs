@@ -25,7 +25,7 @@ namespace MundoFashion.Application.Services
                 Subject = new ClaimsIdentity(new Claim[]
                 {
                     new Claim("sub", usuario.Id.ToString()),
-                    new Claim(ClaimTypes.Name, usuario.Username.ToString()),
+                    new Claim(ClaimTypes.Email, usuario.Email.ToString()),
                     new Claim(ClaimTypes.Role, usuario.Role.ToString())
                 }),
                 Expires = DateTime.UtcNow.AddHours(double.Parse(_configurations["Jwt:Expiration"])),

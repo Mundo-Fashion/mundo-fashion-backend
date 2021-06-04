@@ -9,6 +9,8 @@ using System.Security.Claims;
 
 namespace MundoFashion.WebApi.Controllers.Base
 {
+    [ApiController]
+    [Route("api/[controller]")]
     public abstract class ApiControllerBase : ControllerBase
     {
         private readonly NotificacaoHandler _notificacoes;

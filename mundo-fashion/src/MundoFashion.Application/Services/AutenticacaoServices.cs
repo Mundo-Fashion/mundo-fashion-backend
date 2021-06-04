@@ -17,19 +17,19 @@ namespace MundoFashion.Application.Services
             _usuarioRepository = usuarioRepository;
         }
 
-        public async Task<TokenDto> Logar(string username, string senha)
+        public async Task<TokenDto> Logar(string email, string senha)
         {
-            Usuario usuario = await _usuarioRepository.ObterUsuarioPorUserNameSenha(username, senha);
+            Usuario usuario = await _usuarioRepository.ObterUsuarioPorUserNameSenha(email, senha);
 
             if (usuario is null)
             {
-                Notificar($"Usuario '{username}' não encontrado.");
+                Notificar($"Usuario '{email}' não encontrado.");
                 return null;
             }
 
             string token = _tokenServices.GenerateToken(usuario);
 
-            return new TokenDto(new UsuarioDto(), token);
+            return new TokenDto(new UsuarioDto(usuario.Id, usuario.Nome, usuario.Email, usuario.Role, usuario.CreatedAt), token);
         }
     }
 }

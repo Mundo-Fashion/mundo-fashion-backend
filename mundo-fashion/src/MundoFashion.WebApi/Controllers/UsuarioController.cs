@@ -1,89 +1,99 @@
 ﻿using AutoMapper;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using MundoFashion.Application.Services;
 using MundoFashion.Core.Constants;
 using MundoFashion.Core.Notifications;
-using MundoFashion.Domain;
+using MundoFashion.Core.Storage;
 using MundoFashion.Domain.Repositories;
 using MundoFashion.Domain.Servicos;
 using MundoFashion.WebApi.Controllers.Base;
 using MundoFashion.WebApi.Models;
+using MundoFashion.WebApi.Models.Usuario;
 using System;
 using System.Threading.Tasks;
 
 namespace MundoFashion.WebApi.Controllers
 {
-    [Route("api/[controller]")]
-    [ApiController]
+    [Authorize]
     public class UsuarioController : ApiControllerBase
     {
         private readonly UsuarioServices _usuarioServices;
         private readonly IUsuarioRepository _usuarioRepository;
         private readonly IMapper _mapper;
-        public UsuarioController(INotificationHandler<Notificacao> notificacoes, UsuarioServices usuarioServices, IMapper mapper, IUsuarioRepository usuarioRepository) : base(notificacoes)
+        private readonly ICloudStorage _cloudStorage;
+        public UsuarioController(INotificationHandler<Notificacao> notificacoes, UsuarioServices usuarioServices, IMapper mapper, IUsuarioRepository usuarioRepository, ICloudStorage cloudStorage) : base(notificacoes)
         {
             _usuarioServices = usuarioServices;
             _mapper = mapper;
             _usuarioRepository = usuarioRepository;
+            _cloudStorage = cloudStorage;
         }
 
         [HttpPost]
         [Route("criar-usuario")]
+        [AllowAnonymous]
         public async Task<ActionResult<string>> CriarUsuario(UsuarioModel usuario)
         {
-            await _usuarioServices.CriarUsuario(usuario.Username, usuario.Password);
-            return RespostaCustomizada("Usuário criado");
-        }
+            await _usuarioServices.CriarUsuario(usuario.Nome, usuario.Cpf, usuario.Email, usuario.Senha)
+                                  .ConfigureAwait(false);
 
-        [HttpPost]
-        [Route("criar-empresa")]
-        [Authorize(Roles = Roles.CLIENTE)]
-        public async Task<ActionResult<string>> CriarEmpresa(EmpresaModel empresa)
-        {
-            await _usuarioServices.CriarEmpresa(UsuarioId, new Empresa(empresa.Nome, empresa.Cnpj));
-            return RespostaCustomizada($"Empresa '{empresa.Nome}' criada.");
-        }
+            return RespostaCustomizada("Usuário criado");
+        }       
 
         [HttpPost]
         [Route("criar-servico-usuario")]
-        public async Task<ActionResult<string>> CriarServicoPrestador(ServicoEstampaModel servico)
+        public async Task<ActionResult<string>> CriarServicoUsuario([FromForm] ServicoEstampaModel servico)
         {
-            ServicoEstampa novoServico = _mapper.Map<ServicoEstampa>(servico);
+            ServicoEstampa novoServico = new ServicoEstampa(servico.TipoEstampa,
+                                                            servico.TipoTecnica,
+                                                            servico.TipoTecnicaEstamparia,
+                                                            servico.TipoNicho,
+                                                            servico.TipoRapport);
 
-            await _usuarioServices.CriarServicoUsuario(UsuarioId, novoServico);
+            foreach (IFormFile imagem in servico.ImagensUpload)
+            {
+                string nomeImagem = $"{Guid.NewGuid()}_{imagem.FileName}";
+                novoServico.AdicionarImagem(await _cloudStorage.UploadFileAsync(imagem, nomeImagem).ConfigureAwait(false));
+            }
+
+            await _usuarioServices.CriarServicoUsuario(UsuarioId, novoServico)
+                                  .ConfigureAwait(false);
+
             return RespostaCustomizada("Serviço criado.");
         }
 
         [HttpGet]
         [Route("obter-usuario/{id:guid}")]
-        [Authorize]
+        [AllowAnonymous]
         public async Task<ActionResult<UsuarioModel>> ObterUsuario(Guid id)
         {
-            return _mapper.Map<UsuarioModel>(await _usuarioRepository.ObterUsuarioPorId(id));
+            return _mapper.Map<UsuarioModel>(await _usuarioRepository.ObterUsuarioCompletoPorId(id).ConfigureAwait(false));
         }
 
         [HttpPut]
         [Route("atualizar-servico-usuario")]
         [Authorize(Roles = Roles.CLIENTE_PRESTADOR)]
-        public async Task<ActionResult<string>> AtualizarServicoUsuario([FromBody]ServicoEstampaModel servico)
+        public async Task<ActionResult<string>> AtualizarServicoUsuario([FromBody] ServicoEstampaModel servico)
         {
             ServicoEstampa servicoAtualizado = _mapper.Map<ServicoEstampa>(servico);
 
-            await _usuarioServices.AtualizarServicoUsuario(UsuarioId, servicoAtualizado);
+            await _usuarioServices.AtualizarServicoUsuario(UsuarioId, servicoAtualizado)
+                                  .ConfigureAwait(false);
 
             return RespostaCustomizada("Serviço atualizado com sucesso.");
         }
 
-        [HttpDelete]
-        [Route("remover-servico-usuario/{usuarioId:guid}")]
-        [Authorize]
-        public async Task<ActionResult<string>> RemoverServicoUsuario(Guid usuarioId)
+        [HttpPut]
+        [Route("inativar-servico-usuario/{usuarioId:guid}")]
+        public async Task<ActionResult<string>> InativarServicoUsuario(Guid usuarioId)
         {
-            await _usuarioServices.RemoverServicoUsuario(usuarioId);
+            await _usuarioServices.InativarServicoUsuario(usuarioId)
+                                  .ConfigureAwait(false);
 
             return RespostaCustomizada("Serviço removido com sucesso.");
-        }
+        }        
     }
 }

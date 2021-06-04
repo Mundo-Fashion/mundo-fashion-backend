@@ -19,42 +19,31 @@ namespace MundoFashion.Application.Services
             _usuarioRepository = usuarioRepository;
         }
 
-        public async Task CriarUsuario(string username, string senha, string role = Roles.CLIENTE)
+        public async Task CriarUsuario(string nome, string cpf, string email, string senha, string role = Roles.CLIENTE)
         {
-            if (await _usuarioRepository.UsuarioExiste(username))
+            if (await _usuarioRepository.UsuarioExiste(email))
             {
                 Notificar("Usuário já cadastrado");
                 return;
             }
 
-            Usuario novoUsuario = new Usuario(username, senha, role);
+            Usuario novoUsuario = new Usuario(nome, cpf, email, senha, role);
 
             if (!Validar<Usuario, UsuarioValidator>(novoUsuario)) return;
 
             _usuarioRepository.AdicionarUsuario(novoUsuario);
-            await _usuarioRepository.Commit();
+            await _usuarioRepository.Commit().ConfigureAwait(false);
         }
-
-        public async Task CriarEmpresa(Guid usuarioId, Empresa empresa)
-        {
-            if (!Validar<Empresa, EmpresaValidator>(empresa)) return;
-
-            Usuario usuario = await _usuarioRepository.ObterUsuarioPorId(usuarioId);
-
-            usuario.AdicionarEmpresa(empresa);
-
-            _usuarioRepository.AdicionarEmpresa(empresa);
-            _usuarioRepository.AtualizarUsuario(usuario);
-            await _usuarioRepository.Commit();
-        }
-
+        
         public async Task CriarServicoUsuario(Guid usuarioId, ServicoEstampa servico)
         {
+            if (!Validar<ServicoEstampa, ServicoEstampaValidator>(servico)) return;
+
             Usuario usuario = await _usuarioRepository.ObterUsuarioPorId(usuarioId);
 
             if (usuario.PossuiServico())
             {
-                Notificar($"O usuário '{usuario.Username}' já possui um serviço cadastrado. Altere-o!");
+                Notificar($"O usuário '{usuario.Email}' já possui um serviço cadastrado. Altere-o!");
                 return;
             }
 
@@ -62,16 +51,18 @@ namespace MundoFashion.Application.Services
 
             _usuarioRepository.AdicionarServico(servico);
             _usuarioRepository.AtualizarUsuario(usuario);
-            await _usuarioRepository.Commit();
+            await _usuarioRepository.Commit().ConfigureAwait(false);
         }
 
         public async Task AtualizarServicoUsuario(Guid usuarioId, ServicoEstampa servicoAtualizado)
         {
+            if (!Validar<ServicoEstampa, ServicoEstampaValidator>(servicoAtualizado)) return;
+
             Usuario usuario = await _usuarioRepository.ObterUsuarioPorId(usuarioId);
 
             if (!usuario.PossuiServico())
             {
-                Notificar($"O usuário {usuario.Username} não possui serviços cadastrados.");
+                Notificar($"O usuário {usuario.Email} não possui serviços cadastrados.");
                 return;
             }
 
@@ -79,24 +70,24 @@ namespace MundoFashion.Application.Services
 
             _usuarioRepository.AtualizarServico(usuario.Servico);
             _usuarioRepository.AtualizarUsuario(usuario);
-            await _usuarioRepository.Commit();
+            await _usuarioRepository.Commit().ConfigureAwait(false);
         }
 
-        public async Task RemoverServicoUsuario(Guid usuarioId)
+        public async Task InativarServicoUsuario(Guid usuarioId)
         {
             Usuario usuario = await _usuarioRepository.ObterUsuarioPorId(usuarioId);
 
-            if(usuario is null)
+            if (usuario is null)
             {
                 Notificar("Usuário não encontrado na base de dados.");
                 return;
             }
 
-            usuario.RemoverServico();
+            usuario.InativarServico();
 
-            _usuarioRepository.RemoverServico(usuario.Servico);
             _usuarioRepository.AtualizarUsuario(usuario);
-            await _usuarioRepository.Commit();
+            _usuarioRepository.AtualizarServico(usuario.Servico);
+            await _usuarioRepository.Commit().ConfigureAwait(false);
         }
     }
 }

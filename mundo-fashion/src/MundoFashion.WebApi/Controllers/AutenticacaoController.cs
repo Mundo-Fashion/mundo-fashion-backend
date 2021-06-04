@@ -8,8 +8,6 @@ using System.Threading.Tasks;
 
 namespace MundoFashion.WebApi.Controllers
 {
-    [Route("api/[controller]")]
-    [ApiController]
     public class AutenticacaoController : ApiControllerBase
     {
         private readonly AutenticacaoServices _autenticacaoServices;
@@ -21,9 +19,9 @@ namespace MundoFashion.WebApi.Controllers
 
         [HttpPost]
         [Route("logar")]
-        public async Task<ActionResult<TokenDto>> Logar(string username, string senha)
+        public async Task<ActionResult<TokenDto>> Logar(string email, string senha)
         {
-            return RespostaCustomizada(await _autenticacaoServices.Logar(username, senha));
+            return RespostaCustomizada(await _autenticacaoServices.Logar(email, senha).ConfigureAwait(false));
         }
     }
 }

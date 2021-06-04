@@ -10,6 +10,10 @@ namespace MundoFashion.Infrastructure.Data.Mappings
         public void Configure(EntityTypeBuilder<ServicoEstampa> builder)
         {
             builder.HasKey(s => s.Id);
+
+            builder.Property(s => s.Imagens)
+                .HasColumnType("text[]");
+
             builder.ToTable("Servicos");
         }
     }
