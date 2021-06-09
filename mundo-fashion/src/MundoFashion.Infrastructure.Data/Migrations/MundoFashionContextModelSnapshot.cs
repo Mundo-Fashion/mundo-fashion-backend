@@ -197,6 +197,9 @@ namespace MundoFashion.Infrastructure.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
+                    b.Property<string>("AlexaUserId")
+                        .HasColumnType("text");
+
                     b.Property<string>("Cpf")
                         .HasColumnType("text");
 
@@ -217,6 +220,9 @@ namespace MundoFashion.Infrastructure.Data.Migrations
 
                     b.Property<Guid>("ServicoId")
                         .HasColumnType("uuid");
+
+                    b.Property<bool>("UtilizaSuporteAlexa")
+                        .HasColumnType("boolean");
 
                     b.HasKey("Id");
 

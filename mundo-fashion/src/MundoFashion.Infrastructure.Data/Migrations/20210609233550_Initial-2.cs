@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace MundoFashion.Infrastructure.Data.Migrations
 {
-    public partial class Initial : Migration
+    public partial class Initial2 : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -18,6 +18,8 @@ namespace MundoFashion.Infrastructure.Data.Migrations
                     Role = table.Column<string>(type: "text", nullable: true),
                     Cpf = table.Column<string>(type: "text", nullable: true),
                     ServicoId = table.Column<Guid>(type: "uuid", nullable: false),
+                    AlexaUserId = table.Column<string>(type: "text", nullable: true),
+                    UtilizaSuporteAlexa = table.Column<bool>(type: "boolean", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "timestamp without time zone", nullable: false)
                 },
                 constraints: table =>

@@ -10,8 +10,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace MundoFashion.Infrastructure.Data.Migrations
 {
     [DbContext(typeof(MundoFashionContext))]
-    [Migration("20210604145546_Initial")]
-    partial class Initial
+    [Migration("20210609233550_Initial-2")]
+    partial class Initial2
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -199,6 +199,9 @@ namespace MundoFashion.Infrastructure.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
+                    b.Property<string>("AlexaUserId")
+                        .HasColumnType("text");
+
                     b.Property<string>("Cpf")
                         .HasColumnType("text");
 
@@ -219,6 +222,9 @@ namespace MundoFashion.Infrastructure.Data.Migrations
 
                     b.Property<Guid>("ServicoId")
                         .HasColumnType("uuid");
+
+                    b.Property<bool>("UtilizaSuporteAlexa")
+                        .HasColumnType("boolean");
 
                     b.HasKey("Id");
 
