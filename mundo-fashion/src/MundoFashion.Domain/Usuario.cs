@@ -16,6 +16,8 @@ namespace MundoFashion.Domain
         public string Cpf { get; private set; }
         public ServicoEstampa Servico { get; private set; }
         public Guid ServicoId { get; private set; }
+        public string AlexaUserId { get; private set; }
+        public bool UtilizaSuporteAlexa { get; private set; }
 
         private Usuario() { }
         public Usuario(string nome, string cpf, string email, string senha, string role)
@@ -67,5 +69,20 @@ namespace MundoFashion.Domain
 
         public bool PossuiServico()
             => !ServicoId.Equals(Guid.Empty);
+
+        public void AssociarAlexaUserId(string alexaUserId)
+           => AlexaUserId = alexaUserId;
+
+        public void DesassociarAlexaUserId()
+           => AlexaUserId = string.Empty;
+
+        public void AtivarSuporteAlexa()
+           => UtilizaSuporteAlexa = true;
+
+        public void DesativarSuporteAlexa()
+        {
+            UtilizaSuporteAlexa = false;
+            DesassociarAlexaUserId();
+        }
     }
 }

@@ -39,7 +39,7 @@ namespace MundoFashion.Infrastructure.Data.Repositories
                 .Include(u => u.Servico)
                 .SingleOrDefaultAsync(u => u.Id == id);
         }
-        
+
 
         public async Task<bool> UsuarioExiste(string email)
         {
@@ -63,17 +63,20 @@ namespace MundoFashion.Infrastructure.Data.Repositories
         public async Task<ServicoEstampa> ObterServico(Guid id)
         {
             return await _context.Servicos.SingleOrDefaultAsync(s => s.Id == id);
-        }      
+        }
 
         public async Task<bool> Commit()
         {
             return await _context.SaveChangesAsync() > 0;
         }
-        
+        public async Task<Usuario> ObterUsuarioPorAlexaUserId(string alexaUserId)
+        {
+            return await _context.Usuarios.SingleOrDefaultAsync(u => u.AlexaUserId == alexaUserId);
+        }
+
         public void Dispose()
         {
             _context?.Dispose();
         }
-
     }
 }

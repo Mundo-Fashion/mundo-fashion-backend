@@ -1,4 +1,5 @@
-﻿using MundoFashion.Application.Services.Base;
+﻿using Microsoft.Extensions.Caching.Memory;
+using MundoFashion.Application.Services.Base;
 using MundoFashion.Core.Constants;
 using MundoFashion.Core.Notifications;
 using MundoFashion.Domain;
@@ -13,6 +14,7 @@ namespace MundoFashion.Application.Services
     public class UsuarioServices : BaseServices
     {
         private readonly IUsuarioRepository _usuarioRepository;
+        private readonly IMemoryCache _cache;
 
         public UsuarioServices(IUsuarioRepository usuarioRepository, Notificador notificador) : base(notificador)
         {
@@ -34,7 +36,7 @@ namespace MundoFashion.Application.Services
             _usuarioRepository.AdicionarUsuario(novoUsuario);
             await _usuarioRepository.Commit().ConfigureAwait(false);
         }
-        
+
         public async Task CriarServicoUsuario(Guid usuarioId, ServicoEstampa servico)
         {
             if (!Validar<ServicoEstampa, ServicoEstampaValidator>(servico)) return;

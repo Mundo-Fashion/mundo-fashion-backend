@@ -3,10 +3,12 @@ using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Caching.Memory;
 using MundoFashion.Application.Services;
 using MundoFashion.Core.Constants;
 using MundoFashion.Core.Notifications;
 using MundoFashion.Core.Storage;
+using MundoFashion.Domain;
 using MundoFashion.Domain.Repositories;
 using MundoFashion.Domain.Servicos;
 using MundoFashion.WebApi.Controllers.Base;
@@ -24,7 +26,7 @@ namespace MundoFashion.WebApi.Controllers
         private readonly IUsuarioRepository _usuarioRepository;
         private readonly IMapper _mapper;
         private readonly ICloudStorage _cloudStorage;
-        public UsuarioController(INotificationHandler<Notificacao> notificacoes, UsuarioServices usuarioServices, IMapper mapper, IUsuarioRepository usuarioRepository, ICloudStorage cloudStorage) : base(notificacoes)
+        public UsuarioController(INotificationHandler<Notificacao> notificacoes, UsuarioServices usuarioServices, IMapper mapper, IUsuarioRepository usuarioRepository, ICloudStorage cloudStorage, IMemoryCache cache) : base(notificacoes)
         {
             _usuarioServices = usuarioServices;
             _mapper = mapper;
@@ -41,7 +43,7 @@ namespace MundoFashion.WebApi.Controllers
                                   .ConfigureAwait(false);
 
             return RespostaCustomizada("Usuário criado");
-        }       
+        }
 
         [HttpPost]
         [Route("criar-servico-usuario")]
@@ -94,6 +96,6 @@ namespace MundoFashion.WebApi.Controllers
                                   .ConfigureAwait(false);
 
             return RespostaCustomizada("Serviço removido com sucesso.");
-        }        
+        }
     }
 }

@@ -31,6 +31,12 @@ namespace MundoFashion.Infrastructure.Ioc
             AdicionarRepositories(services);
             AdicionarAutoMapper(services, aplicacaoAssembly);
             AdicionarFileStorage(services);
+            AdicionarMemoryCache(services);
+        }
+
+        private static void AdicionarMemoryCache(IServiceCollection service)
+        {
+            service.AddMemoryCache();
         }
 
         private static void AdicionarFileStorage(IServiceCollection services)
