@@ -19,8 +19,4 @@
     <ProjectReference Include="..\MundoFashion.Domain\MundoFashion.Domain.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Migrations\" />
-  </ItemGroup>
-
 </Project>

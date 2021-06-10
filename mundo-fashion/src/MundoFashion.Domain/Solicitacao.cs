@@ -26,6 +26,7 @@ namespace MundoFashion.Domain
         }
 
         public StatusSolicitacao Status { get; private set; }
+        public long Codigo { get; private set; }
         public bool Aceita { get; private set; }
         public IReadOnlyCollection<Mensagem> Mensagens => _mensagens.AsReadOnly();
         public DetalhesSolicitacao Detalhes { get; private set; }

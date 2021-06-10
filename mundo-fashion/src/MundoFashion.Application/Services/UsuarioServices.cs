@@ -14,7 +14,6 @@ namespace MundoFashion.Application.Services
     public class UsuarioServices : BaseServices
     {
         private readonly IUsuarioRepository _usuarioRepository;
-        private readonly IMemoryCache _cache;
 
         public UsuarioServices(IUsuarioRepository usuarioRepository, Notificador notificador) : base(notificador)
         {

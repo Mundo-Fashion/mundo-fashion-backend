@@ -1,9 +1,10 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore.Migrations;
+using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace MundoFashion.Infrastructure.Data.Migrations
 {
-    public partial class Initial2 : Migration
+    public partial class initial3 : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -59,6 +60,8 @@ namespace MundoFashion.Infrastructure.Data.Migrations
                 {
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
                     Status = table.Column<int>(type: "integer", nullable: false),
+                    Codigo = table.Column<long>(type: "bigint", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     Aceita = table.Column<bool>(type: "boolean", nullable: false),
                     DetalhesId = table.Column<Guid>(type: "uuid", nullable: false),
                     PropostaId = table.Column<Guid>(type: "uuid", nullable: true),

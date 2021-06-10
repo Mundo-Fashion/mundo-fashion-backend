@@ -8,11 +8,11 @@ using MundoFashion.Application.Services;
 using MundoFashion.Core.Constants;
 using MundoFashion.Core.Notifications;
 using MundoFashion.Core.Storage;
-using MundoFashion.Domain;
 using MundoFashion.Domain.Repositories;
 using MundoFashion.Domain.Servicos;
 using MundoFashion.WebApi.Controllers.Base;
 using MundoFashion.WebApi.Models;
+using MundoFashion.WebApi.Models.Servico;
 using MundoFashion.WebApi.Models.Usuario;
 using System;
 using System.Threading.Tasks;
@@ -47,7 +47,7 @@ namespace MundoFashion.WebApi.Controllers
 
         [HttpPost]
         [Route("criar-servico-usuario")]
-        public async Task<ActionResult<string>> CriarServicoUsuario([FromForm] ServicoEstampaModel servico)
+        public async Task<ActionResult<string>> CriarServicoUsuario([FromForm] NovoServicoEstampaModel servico)
         {
             ServicoEstampa novoServico = new ServicoEstampa(servico.TipoEstampa,
                                                             servico.TipoTecnica,

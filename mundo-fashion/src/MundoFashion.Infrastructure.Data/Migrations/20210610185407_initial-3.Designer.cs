@@ -10,8 +10,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace MundoFashion.Infrastructure.Data.Migrations
 {
     [DbContext(typeof(MundoFashionContext))]
-    [Migration("20210609233550_Initial-2")]
-    partial class Initial2
+    [Migration("20210610185407_initial-3")]
+    partial class initial3
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -165,6 +165,11 @@ namespace MundoFashion.Infrastructure.Data.Migrations
 
                     b.Property<bool>("Aceita")
                         .HasColumnType("boolean");
+
+                    b.Property<long>("Codigo")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint")
+                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("timestamp without time zone");

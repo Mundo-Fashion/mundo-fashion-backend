@@ -164,6 +164,11 @@ namespace MundoFashion.Infrastructure.Data.Migrations
                     b.Property<bool>("Aceita")
                         .HasColumnType("boolean");
 
+                    b.Property<long>("Codigo")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint")
+                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
+
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("timestamp without time zone");
 
