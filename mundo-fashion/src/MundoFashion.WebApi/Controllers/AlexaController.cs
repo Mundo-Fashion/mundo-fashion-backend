@@ -32,22 +32,28 @@ namespace MundoFashion.WebApi.Controllers
             if (string.IsNullOrWhiteSpace(alexaUserId) || string.IsNullOrWhiteSpace(passcode))
                 return BadRequest("As informações enviadas não podem ser vazia, verifique o código e tente novamente.");
 
-            Guid usuarioId = _cache.Get<Guid>(passcode);  
+            Guid usuarioId = _cache.Get<Guid>(passcode);
 
             if (usuarioId == Guid.Empty)
-                return BadRequest("Código informado inválido ou expirado, tente novamente ou solicit novoe um código.");  
+                return BadRequest("Código informado inválido ou expirado, tente novamente ou solicit novoe um código.");
 
-            Usuario usuario = await _usuarioRepository.ObterUsuarioPorId(usuarioId).ConfigureAwait(false);   
+            Usuario usuario = await _usuarioRepository.ObterUsuarioPorId(usuarioId).ConfigureAwait(false);
 
-            usuario.AtivarSuporteAlexa();
-            usuario.AssociarAlexaUserId(alexaUserId);
+            if (!usuario.UtilizaSuporteAlexa)
+            {
+                usuario.AtivarSuporteAlexa();
+                usuario.AssociarAlexaUserId(alexaUserId);
+
+                _usuarioRepository.AtualizarUsuario(usuario);
+                await _usuarioRepository.Commit().ConfigureAwait(false);
+
+                _cache.Remove(passcode);
+                return RespostaCustomizada("Alexa cadastrada com sucesso.");
+            }
 
             _cache.Remove(passcode);
+            return BadRequest("Alexa já cadastrada.");
 
-            _usuarioRepository.AtualizarUsuario(usuario);  
-            await _usuarioRepository.Commit().ConfigureAwait(false);
-
-            return RespostaCustomizada("Alexa cadastrada com sucesso.");
         }
 
         [HttpGet]
@@ -57,7 +63,9 @@ namespace MundoFashion.WebApi.Controllers
             if (string.IsNullOrWhiteSpace(alexaUserId))
                 return BadRequest("As informações enviadas não podem ser vazia, entre em contato com a administração do mundo fashion.");
 
-            return RespostaCustomizada(await _usuarioRepository.ObterUsuarioPorAlexaUserId(alexaUserId).ConfigureAwait(false) != null);
+            Usuario usuario = await _usuarioRepository.ObterUsuarioPorAlexaUserId(alexaUserId).ConfigureAwait(false);
+
+            return RespostaCustomizada(usuario != null && usuario.UtilizaSuporteAlexa);
         }
 
         [HttpGet, Authorize]
@@ -73,7 +81,7 @@ namespace MundoFashion.WebApi.Controllers
 
         [HttpGet]
         [Route("listar-solicitacoes-usuario-tomador")]
-        public async Task<ActionResult<long[]>> ListarSolicitacoesUsuarioTomador(string alexaUserId)
+        public async Task<ActionResult<string>> ListarSolicitacoesUsuarioTomador(string alexaUserId)
         {
             if (string.IsNullOrWhiteSpace(alexaUserId))
                 BadRequest("As informações enviadas não podem ser vazia, entre em contato com a administração do mundo fashion.");
@@ -81,7 +89,7 @@ namespace MundoFashion.WebApi.Controllers
             Usuario usuario = await _usuarioRepository.ObterUsuarioPorAlexaUserId(alexaUserId).ConfigureAwait(false);
             long[] codigos = (await _solicitacaoRepository.ObterSolicitacoes(s => s.TomadorId == usuario.Id).ConfigureAwait(false)).Select(s => s.Codigo).ToArray();
 
-            return RespostaCustomizada(codigos);
+            return RespostaCustomizada($"Você possui as seguintes solicitações... {string.Join(",", codigos)}");
         }
 
         [HttpGet]
