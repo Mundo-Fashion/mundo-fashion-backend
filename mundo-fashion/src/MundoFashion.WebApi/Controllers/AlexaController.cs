@@ -93,7 +93,7 @@ namespace MundoFashion.WebApi.Controllers
 
             _logger.LogInformation($"Usuario id - {usuario.Id}");
 
-            long[] codigos = (await _solicitacaoRepository.ObterSolicitacoes(s => s.TomadorId == usuario.Id).ConfigureAwait(false)).Select(s => s.Codigo).ToArray();
+            long[] codigos = _solicitacaoRepository.ObterSolicitacoesQuery(s => s.TomadorId == usuario.Id).Select(s => s.Codigo).ToArray();
 
             _logger.LogInformation($"Quantidade de códigos - {codigos.Length}");
 

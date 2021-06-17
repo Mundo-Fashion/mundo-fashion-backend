@@ -87,7 +87,17 @@ namespace MundoFashion.Infrastructure.Data.Repositories
                                                                .Include(s => s.Detalhes)
                                                                .Where(predicate).ToList());
         }
-        
+
+        public IQueryable<Solicitacao> ObterSolicitacoesQuery(Func<Solicitacao, bool> predicate)
+        {
+            return _context.Solicitacoes.Include(s => s.Servico)
+                                        .ThenInclude(s => s.Prestador)
+                                        .Include(s => s.Tomador)
+                                        .Include(s => s.Detalhes)
+                                        .Where(predicate)
+                                        .AsQueryable();
+        }
+
         public void Dispose()
         {
             _context?.Dispose();

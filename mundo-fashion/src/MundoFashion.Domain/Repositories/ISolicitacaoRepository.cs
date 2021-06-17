@@ -1,6 +1,7 @@
 ﻿using MundoFashion.Core.Data.Repository;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace MundoFashion.Domain.Repositories
@@ -11,6 +12,7 @@ namespace MundoFashion.Domain.Repositories
         void AtualizarSolicitacao(Solicitacao solicitacao);
         Task<Solicitacao> ObterSolicitacaoPorId(Guid id);
         Task<List<Solicitacao>> ObterSolicitacoes(Func<Solicitacao, bool> predicate);
+        IQueryable<Solicitacao> ObterSolicitacoesQuery(Func<Solicitacao, bool> predicate);
         void AdicionarDetalhesSolicitacao(DetalhesSolicitacao detalhes);
         void AtualizarDetalhesSolicitacao(DetalhesSolicitacao detalhes);
         Task<DetalhesSolicitacao> ObterDetalhesSolicitacaoPorId(Guid id);
