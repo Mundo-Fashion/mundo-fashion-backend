@@ -89,7 +89,7 @@ namespace MundoFashion.WebApi.Controllers
             Usuario usuario = await _usuarioRepository.ObterUsuarioPorAlexaUserId(alexaUserId).ConfigureAwait(false);
             long[] codigos = (await _solicitacaoRepository.ObterSolicitacoes(s => s.TomadorId == usuario.Id).ConfigureAwait(false)).Select(s => s.Codigo).ToArray();
 
-            return RespostaCustomizada($"Você possui as seguintes solicitações... {string.Join(",", codigos)}");
+            return RespostaCustomizada($"Você possui os seguintes códigos de solicitações, {string.Join(",", codigos)}");
         }
 
         [HttpGet]
