@@ -89,7 +89,9 @@ namespace MundoFashion.WebApi.Controllers
             Usuario usuario = await _usuarioRepository.ObterUsuarioPorAlexaUserId(alexaUserId).ConfigureAwait(false);
             long[] codigos = (await _solicitacaoRepository.ObterSolicitacoes(s => s.TomadorId == usuario.Id).ConfigureAwait(false)).Select(s => s.Codigo).ToArray();
 
-            return RespostaCustomizada($"Você possui os seguintes códigos de solicitações, {string.Join(",", codigos)}");
+            string mensagem = $"Você possui os seguintes códigos de solicitações {AjustarMensagemAlexaListagem(',', string.Join(", ", codigos))}";
+
+            return RespostaCustomizada(mensagem);
         }
 
         [HttpGet]
@@ -102,7 +104,7 @@ namespace MundoFashion.WebApi.Controllers
             Usuario usuario = await _usuarioRepository.ObterUsuarioPorAlexaUserId(alexaUserId).ConfigureAwait(false);
             Solicitacao solicitacao = (await _solicitacaoRepository.ObterSolicitacoes(s => s.TomadorId == usuario.Id && s.Codigo == codigo).ConfigureAwait(false)).SingleOrDefault();
 
-            return RespostaCustomizada($"A solicitação esta com status {EnumUtils.ObterValorEmTexto(solicitacao.Status)}");
+            return RespostaCustomizada($"A solicitação está com status {EnumUtils.ObterValorEmTexto(solicitacao.Status)}");
         }
 
         private string GetPasscode()
@@ -118,6 +120,19 @@ namespace MundoFashion.WebApi.Controllers
             {
                 return new Random().Next(100000, 999999).ToString();
             }
+        }
+
+        private string AjustarMensagemAlexaListagem(char separador, string mensagem)
+        {
+            int index = mensagem.LastIndexOf(separador);
+
+            char[] mensagemCharArray = mensagem.ToCharArray();
+
+            mensagemCharArray[index] = 'e';
+
+            string mensagemAjustada = new string(mensagemCharArray);
+
+            return mensagemAjustada.Insert(index, " ");
         }
     }
 }
