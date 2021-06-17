@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using MundoFashion.Core.Utils;
 using MundoFashion.Domain.Servicos;
 using MundoFashion.WebApi.Models;
 
@@ -8,20 +9,12 @@ namespace MundoFashion.WebApi.ProfileMaps
     {
         public ServicoEstampaProfile()
         {
-            CreateMap<ServicoEstampaModel, ServicoEstampa>()
-                .ForMember(s => s.TipoEstampa, x => x.MapFrom(y => y.TipoEstampa))
-                .ForMember(s => s.Tecnica, x => x.MapFrom(y => y.TipoTecnica))
-                .ForMember(s => s.TecnicaEstamparia, x => x.MapFrom(y => y.TipoTecnicaEstamparia))
-                .ForMember(s => s.Nicho, x => x.MapFrom(y => y.TipoNicho))
-                .ForMember(s => s.TipoRapport, x => x.MapFrom(y => y.TipoRapport));
-
-            CreateMap<ServicoEstampaModel, ServicoEstampa>()
-             .ForMember(s => s.TipoEstampa, x => x.MapFrom(y => y.TipoEstampa))
-             .ForMember(s => s.Tecnica, x => x.MapFrom(y => y.TipoTecnica))
-             .ForMember(s => s.TecnicaEstamparia, x => x.MapFrom(y => y.TipoTecnicaEstamparia))
-             .ForMember(s => s.Nicho, x => x.MapFrom(y => y.TipoNicho))
-             .ForMember(s => s.TipoRapport, x => x.MapFrom(y => y.TipoRapport))
-             .ReverseMap();
+            CreateMap<ServicoEstampa, ServicoEstampaModel>()
+             .ForMember(s => s.TipoEstampa, x => x.MapFrom(y => EnumUtils.ObterValoresEmTextoFlagEnum(y.TipoEstampa)))
+             .ForMember(s => s.TipoTecnica, x => x.MapFrom(y => EnumUtils.ObterValoresEmTextoFlagEnum(y.Tecnica)))
+             .ForMember(s => s.TipoTecnicaEstamparia, x => x.MapFrom(y => EnumUtils.ObterValoresEmTextoFlagEnum(y.TecnicaEstamparia)))
+             .ForMember(s => s.TipoNicho, x => x.MapFrom(y => EnumUtils.ObterValoresEmTextoFlagEnum(y.Nicho)))
+             .ForMember(s => s.TipoRapport, x => x.MapFrom(y => EnumUtils.ObterValoresEmTextoFlagEnum(y.TipoRapport)));
         }
     }
 }

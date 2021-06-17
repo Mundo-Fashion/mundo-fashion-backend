@@ -1,4 +1,5 @@
-﻿using MundoFashion.Application.Services.Base;
+﻿using Microsoft.Extensions.Caching.Memory;
+using MundoFashion.Application.Services.Base;
 using MundoFashion.Core.Constants;
 using MundoFashion.Core.Notifications;
 using MundoFashion.Domain;
@@ -34,7 +35,7 @@ namespace MundoFashion.Application.Services
             _usuarioRepository.AdicionarUsuario(novoUsuario);
             await _usuarioRepository.Commit().ConfigureAwait(false);
         }
-        
+
         public async Task CriarServicoUsuario(Guid usuarioId, ServicoEstampa servico)
         {
             if (!Validar<ServicoEstampa, ServicoEstampaValidator>(servico)) return;
@@ -87,6 +88,25 @@ namespace MundoFashion.Application.Services
 
             _usuarioRepository.AtualizarUsuario(usuario);
             _usuarioRepository.AtualizarServico(usuario.Servico);
+            await _usuarioRepository.Commit().ConfigureAwait(false);
+        }
+
+        public async Task AtualizarUsuario(Guid usuarioId, Usuario usuarioAtualizado)
+        {
+            Usuario usuario = await _usuarioRepository.ObterUsuarioPorId(usuarioId);
+
+            if (usuario is null)
+            {
+                Notificar("Usuário não encontrado na base de dados.");
+                return;
+            }
+
+            usuario.AtualizarAvatar(usuarioAtualizado.AvatarLink);
+            usuario.AtualizarNome(usuarioAtualizado.Nome);
+            usuario.AtualizarSenha(usuarioAtualizado.Senha);
+            usuario.AtualizarDescricaoPessoal(usuarioAtualizado.DescricaoPessoal);
+
+            _usuarioRepository.AtualizarUsuario(usuario);
             await _usuarioRepository.Commit().ConfigureAwait(false);
         }
     }

@@ -3,14 +3,17 @@ using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Caching.Memory;
 using MundoFashion.Application.Services;
 using MundoFashion.Core.Constants;
 using MundoFashion.Core.Notifications;
 using MundoFashion.Core.Storage;
+using MundoFashion.Domain;
 using MundoFashion.Domain.Repositories;
 using MundoFashion.Domain.Servicos;
 using MundoFashion.WebApi.Controllers.Base;
 using MundoFashion.WebApi.Models;
+using MundoFashion.WebApi.Models.Servico;
 using MundoFashion.WebApi.Models.Usuario;
 using System;
 using System.Threading.Tasks;
@@ -24,7 +27,7 @@ namespace MundoFashion.WebApi.Controllers
         private readonly IUsuarioRepository _usuarioRepository;
         private readonly IMapper _mapper;
         private readonly ICloudStorage _cloudStorage;
-        public UsuarioController(INotificationHandler<Notificacao> notificacoes, UsuarioServices usuarioServices, IMapper mapper, IUsuarioRepository usuarioRepository, ICloudStorage cloudStorage) : base(notificacoes)
+        public UsuarioController(INotificationHandler<Notificacao> notificacoes, UsuarioServices usuarioServices, IMapper mapper, IUsuarioRepository usuarioRepository, ICloudStorage cloudStorage, IMemoryCache cache) : base(notificacoes)
         {
             _usuarioServices = usuarioServices;
             _mapper = mapper;
@@ -35,23 +38,24 @@ namespace MundoFashion.WebApi.Controllers
         [HttpPost]
         [Route("criar-usuario")]
         [AllowAnonymous]
-        public async Task<ActionResult<string>> CriarUsuario(UsuarioModel usuario)
+        public async Task<ActionResult<string>> CriarUsuario(NovoUsuarioModel usuario)
         {
             await _usuarioServices.CriarUsuario(usuario.Nome, usuario.Cpf, usuario.Email, usuario.Senha)
                                   .ConfigureAwait(false);
 
             return RespostaCustomizada("Usuário criado");
-        }       
+        }
 
         [HttpPost]
         [Route("criar-servico-usuario")]
-        public async Task<ActionResult<string>> CriarServicoUsuario([FromForm] ServicoEstampaModel servico)
+        public async Task<ActionResult<string>> CriarServicoUsuario([FromForm] NovoServicoEstampaModel servico)
         {
             ServicoEstampa novoServico = new ServicoEstampa(servico.TipoEstampa,
                                                             servico.TipoTecnica,
                                                             servico.TipoTecnicaEstamparia,
                                                             servico.TipoNicho,
-                                                            servico.TipoRapport);
+                                                            servico.TipoRapport,
+                                                            servico.DescricaoServico);
 
             foreach (IFormFile imagem in servico.ImagensUpload)
             {
@@ -94,6 +98,24 @@ namespace MundoFashion.WebApi.Controllers
                                   .ConfigureAwait(false);
 
             return RespostaCustomizada("Serviço removido com sucesso.");
-        }        
+        }
+
+        [HttpPut]
+        [Route("atualizar-usuario")]
+        public async Task<ActionResult<string>> AtualizarUsuario([FromForm] UsuarioAtualizadoModel usuarioAtualizado)
+        {
+            Usuario usuario = _mapper.Map<Usuario>(usuarioAtualizado);
+
+            if(usuarioAtualizado.ImagemAvatar?.Length > 0)
+            {
+                string nomeImagem = $"{Guid.NewGuid()}_{usuarioAtualizado.ImagemAvatar.FileName}";
+                usuario.AtualizarAvatar(await _cloudStorage.UploadFileAsync(usuarioAtualizado.ImagemAvatar, nomeImagem).ConfigureAwait(false));
+            }
+
+            await _usuarioServices.AtualizarUsuario(UsuarioId, usuario)
+                                  .ConfigureAwait(false);
+
+            return RespostaCustomizada("Usuário atualizado.");
+        }
     }
 }

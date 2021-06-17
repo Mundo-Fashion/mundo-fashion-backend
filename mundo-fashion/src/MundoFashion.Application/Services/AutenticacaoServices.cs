@@ -29,7 +29,7 @@ namespace MundoFashion.Application.Services
 
             string token = _tokenServices.GenerateToken(usuario);
 
-            return new TokenDto(new UsuarioDto(usuario.Id, usuario.Nome, usuario.Email, usuario.Role, usuario.CreatedAt), token);
+            return new TokenDto(new UsuarioDto(usuario.Id, usuario.AvatarLink, usuario.Nome, usuario.Email, usuario.Role, usuario.CreatedAt, usuario.DescricaoPessoal), token);
         }
     }
 }

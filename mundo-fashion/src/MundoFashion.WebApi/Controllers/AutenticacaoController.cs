@@ -4,6 +4,7 @@ using MundoFashion.Application.Services;
 using MundoFashion.Core.Dto;
 using MundoFashion.Core.Notifications;
 using MundoFashion.WebApi.Controllers.Base;
+using MundoFashion.WebApi.Models;
 using System.Threading.Tasks;
 
 namespace MundoFashion.WebApi.Controllers
@@ -19,9 +20,9 @@ namespace MundoFashion.WebApi.Controllers
 
         [HttpPost]
         [Route("logar")]
-        public async Task<ActionResult<TokenDto>> Logar(string email, string senha)
+        public async Task<ActionResult<TokenDto>> Logar(AutenticacaoModel autenticacaoModel)
         {
-            return RespostaCustomizada(await _autenticacaoServices.Logar(email, senha).ConfigureAwait(false));
+            return RespostaCustomizada(await _autenticacaoServices.Logar(autenticacaoModel.Email, autenticacaoModel.Senha).ConfigureAwait(false));
         }
     }
 }

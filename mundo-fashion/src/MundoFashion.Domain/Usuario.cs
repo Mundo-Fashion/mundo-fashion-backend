@@ -3,19 +3,22 @@ using MundoFashion.Core.Constants;
 using MundoFashion.Core.Interfaces;
 using MundoFashion.Domain.Servicos;
 using System;
-using System.Collections.Generic;
 
 namespace MundoFashion.Domain
 {
     public class Usuario : Entity, IAggregateRoot
     {
+        public string AvatarLink { get; private set; } 
         public string Nome { get; private set; }
         public string Email { get; private set; }
-        public string Password { get; private set; }
+        public string Senha { get; private set; }
         public string Role { get; private set; }
         public string Cpf { get; private set; }
         public ServicoEstampa Servico { get; private set; }
         public Guid ServicoId { get; private set; }
+        public string DescricaoPessoal { get; private set; }
+        public string AlexaUserId { get; private set; }
+        public bool UtilizaSuporteAlexa { get; private set; }
 
         private Usuario() { }
         public Usuario(string nome, string cpf, string email, string senha, string role)
@@ -23,8 +26,26 @@ namespace MundoFashion.Domain
             Nome = nome;
             Cpf = cpf;
             Email = email;
-            Password = senha;
+            Senha = senha;
             Role = role;
+        }
+
+        public void AtualizarNome(string nomeAtualizado)
+        {
+            if (!Nome.Equals(nomeAtualizado) && !string.IsNullOrWhiteSpace(nomeAtualizado))
+                Nome = nomeAtualizado;
+        }
+
+        public void AtualizarSenha(string senhaAtualizada)
+        {
+            if (!Senha.Equals(senhaAtualizada) && !string.IsNullOrWhiteSpace(senhaAtualizada))
+                Senha = senhaAtualizada;
+        }
+
+        public void AtualizarDescricaoPessoal(string descricaoPessoalAtualizada)
+        {
+            if (string.IsNullOrWhiteSpace(DescricaoPessoal) || !DescricaoPessoal.Equals(descricaoPessoalAtualizada))
+                DescricaoPessoal = descricaoPessoalAtualizada;
         }
 
         public void SetarCpf(string cpf)
@@ -67,5 +88,26 @@ namespace MundoFashion.Domain
 
         public bool PossuiServico()
             => !ServicoId.Equals(Guid.Empty);
+
+        public void AssociarAlexaUserId(string alexaUserId)
+           => AlexaUserId = alexaUserId;
+
+        public void DesassociarAlexaUserId()
+           => AlexaUserId = string.Empty;
+
+        public void AtivarSuporteAlexa()
+           => UtilizaSuporteAlexa = true;
+
+        public void DesativarSuporteAlexa()
+        {
+            UtilizaSuporteAlexa = false;
+            DesassociarAlexaUserId();
+        }
+
+        public void AtualizarAvatar(string novoLinkAvatar)
+        {
+            if (!AvatarLink.Equals(novoLinkAvatar) && !string.IsNullOrWhiteSpace(novoLinkAvatar))
+                AvatarLink = novoLinkAvatar;
+        }
     }
 }

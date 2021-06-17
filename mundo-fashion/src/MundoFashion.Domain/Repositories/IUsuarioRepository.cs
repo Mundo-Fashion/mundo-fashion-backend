@@ -16,5 +16,6 @@ namespace MundoFashion.Domain.Repositories
         void AdicionarServico(ServicoEstampa servico);
         void AtualizarServico(ServicoEstampa servico);
         Task<ServicoEstampa> ObterServico(Guid id);
+        Task<Usuario> ObterUsuarioPorAlexaUserId(string alexaUserId);
     }
 }

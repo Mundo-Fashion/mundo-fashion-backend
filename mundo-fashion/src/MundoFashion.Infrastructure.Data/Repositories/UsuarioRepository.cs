@@ -39,7 +39,7 @@ namespace MundoFashion.Infrastructure.Data.Repositories
                 .Include(u => u.Servico)
                 .SingleOrDefaultAsync(u => u.Id == id);
         }
-        
+
 
         public async Task<bool> UsuarioExiste(string email)
         {
@@ -48,7 +48,7 @@ namespace MundoFashion.Infrastructure.Data.Repositories
 
         public async Task<Usuario> ObterUsuarioPorUserNameSenha(string email, string senha)
         {
-            return await _context.Usuarios.Where(u => u.Email.Equals(email) && u.Password.Equals(senha)).SingleOrDefaultAsync();
+            return await _context.Usuarios.Where(u => u.Email.Equals(email) && u.Senha.Equals(senha)).SingleOrDefaultAsync();
         }
         public void AdicionarServico(ServicoEstampa servico)
         {
@@ -63,17 +63,20 @@ namespace MundoFashion.Infrastructure.Data.Repositories
         public async Task<ServicoEstampa> ObterServico(Guid id)
         {
             return await _context.Servicos.SingleOrDefaultAsync(s => s.Id == id);
-        }      
+        }
 
         public async Task<bool> Commit()
         {
             return await _context.SaveChangesAsync() > 0;
         }
-        
+        public async Task<Usuario> ObterUsuarioPorAlexaUserId(string alexaUserId)
+        {
+            return await _context.Usuarios.SingleOrDefaultAsync(u => u.AlexaUserId == alexaUserId);
+        }
+
         public void Dispose()
         {
             _context?.Dispose();
         }
-
     }
 }

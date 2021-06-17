@@ -4,6 +4,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
+using MundoFashion.Core.Enums.Servicos.Estampa;
+using MundoFashion.Core.Utils;
 using MundoFashion.Infrastructure.Ioc;
 
 namespace MundoFashion.WebApi

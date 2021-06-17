@@ -9,6 +9,7 @@ namespace MundoFashion.WebApi.Models.Solicitacao
     {
         public Guid Id { get; set; }
         public string Status { get; set; }
+        public long Codigo { get; set; }
         public PrestadorTomadorModel Tomador { get; set; }
         public DetalhesSolicitacaoModel Detalhes { get; set; }
         public ServicoEstampaModel Servico { get; set; }

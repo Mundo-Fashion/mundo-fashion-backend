@@ -9,6 +9,7 @@ namespace MundoFashion.Domain.Servicos
         public TipoTecnicaEstamparia TecnicaEstamparia { get; private set; }
         public TipoNicho Nicho { get; private set; }
         public TipoRapport TipoRapport { get; private set; }
+        public string Descricao { get; private set; }
 
         private ServicoEstampa() { }
 
@@ -16,8 +17,9 @@ namespace MundoFashion.Domain.Servicos
             int tecnica,
             int tecnicaEstamparia,
             int nicho,
-            int tipoRapport) :
-            this((TipoEstampa)tipoEstampa, (TipoTecnicaEstampa)tecnica, (TipoTecnicaEstamparia)tecnicaEstamparia, (TipoNicho)nicho, (TipoRapport)tipoRapport)
+            int tipoRapport,
+            string descricao) :
+            this((TipoEstampa)tipoEstampa, (TipoTecnicaEstampa)tecnica, (TipoTecnicaEstamparia)tecnicaEstamparia, (TipoNicho)nicho, (TipoRapport)tipoRapport, descricao)
         { }
 
         public ServicoEstampa(
@@ -25,13 +27,15 @@ namespace MundoFashion.Domain.Servicos
             TipoTecnicaEstampa tecnica,
             TipoTecnicaEstamparia tecnicaEstamparia,
             TipoNicho nicho,
-            TipoRapport tipoRapport)
+            TipoRapport tipoRapport,
+            string descricao)
         {
             TipoEstampa = tipoEstampa;
             Tecnica = tecnica;
             TecnicaEstamparia = tecnicaEstamparia;
             Nicho = nicho;
             TipoRapport = tipoRapport;
+            Descricao = descricao;
         }
 
         public void AtualizarTipoEstampa(TipoEstampa tipoEstampa)
@@ -58,6 +62,5 @@ namespace MundoFashion.Domain.Servicos
         {
             TipoRapport = tipoRapport;
         }
-
     }
 }
