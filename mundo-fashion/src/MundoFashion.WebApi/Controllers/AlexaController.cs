@@ -5,6 +5,7 @@ using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Caching.Memory;
+using Microsoft.Extensions.Logging;
 using MundoFashion.Core.Notifications;
 using MundoFashion.Core.Utils;
 using MundoFashion.Domain;
@@ -18,11 +19,13 @@ namespace MundoFashion.WebApi.Controllers
         private readonly IMemoryCache _cache;
         private readonly IUsuarioRepository _usuarioRepository;
         private readonly ISolicitacaoRepository _solicitacaoRepository;
-        public AlexaController(INotificationHandler<Notificacao> notificacoes, IMemoryCache cache, IUsuarioRepository usuarioRepository, ISolicitacaoRepository solicitacaoRepository) : base(notificacoes)
+        private readonly ILogger<AlexaController> _logger;
+        public AlexaController(INotificationHandler<Notificacao> notificacoes, IMemoryCache cache, IUsuarioRepository usuarioRepository, ISolicitacaoRepository solicitacaoRepository, ILogger<AlexaController> logger) : base(notificacoes)
         {
             _cache = cache;
             _usuarioRepository = usuarioRepository;
             _solicitacaoRepository = solicitacaoRepository;
+            _logger = logger;
         }
 
         [HttpPost]
@@ -87,7 +90,12 @@ namespace MundoFashion.WebApi.Controllers
                 BadRequest("As informações enviadas não podem ser vazia, entre em contato com a administração do mundo fashion.");
 
             Usuario usuario = await _usuarioRepository.ObterUsuarioPorAlexaUserId(alexaUserId).ConfigureAwait(false);
+
+            _logger.LogInformation($"Usuario id - {usuario.Id}");
+
             long[] codigos = (await _solicitacaoRepository.ObterSolicitacoes(s => s.TomadorId == usuario.Id).ConfigureAwait(false)).Select(s => s.Codigo).ToArray();
+
+            _logger.LogInformation($"Quantidade de códigos - {codigos.Length}");
 
             string mensagem = $"Você possui os seguintes códigos de solicitações {AjustarMensagemAlexaListagem(',', string.Join(", ", codigos))}";
 
