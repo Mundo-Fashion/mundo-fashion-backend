@@ -14,12 +14,15 @@ namespace MundoFashion.Domain.Validacoes
             RuleFor(u => u.Nome)
                 .NotEmpty();
 
-            RuleFor(u => u.Password)
+            RuleFor(u => u.Senha)
                 .NotEmpty()
-                .When(x => string.IsNullOrWhiteSpace(x.Password));
+                .When(x => string.IsNullOrWhiteSpace(x.Senha));
 
             RuleFor(u => u.Role)
                 .NotEmpty();
+
+            RuleFor(u => u.Cpf)
+                .NotEmpty();    
         }
     }
 }

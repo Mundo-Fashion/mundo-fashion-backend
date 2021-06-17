@@ -20,7 +20,10 @@ namespace MundoFashion.Domain
             => SolicitacaoId = solicitacaoId;
 
         public void AtualizarValor(double valor)
-            => Valor = valor;
+        {
+            Valor = valor;
+            Aceita = false;    
+        }
 
         public void AceitarProposta()
             => Aceita = true;

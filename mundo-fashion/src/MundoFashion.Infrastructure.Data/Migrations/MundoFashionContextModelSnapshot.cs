@@ -16,7 +16,7 @@ namespace MundoFashion.Infrastructure.Data.Migrations
 #pragma warning disable 612, 618
             modelBuilder
                 .HasAnnotation("Relational:MaxIdentifierLength", 63)
-                .HasAnnotation("ProductVersion", "5.0.5")
+                .HasAnnotation("ProductVersion", "5.0.6")
                 .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
 
             modelBuilder.Entity("MundoFashion.Domain.DetalhesSolicitacao", b =>
@@ -58,37 +58,6 @@ namespace MundoFashion.Infrastructure.Data.Migrations
                         .IsUnique();
 
                     b.ToTable("DetalhesSolicitacoes");
-                });
-
-            modelBuilder.Entity("MundoFashion.Domain.Empresa", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
-
-                    b.Property<bool>("Active")
-                        .HasColumnType("boolean");
-
-                    b.Property<string>("Cnpj")
-                        .HasColumnType("text");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("timestamp without time zone");
-
-                    b.Property<string>("Nome")
-                        .HasColumnType("text");
-
-                    b.Property<Guid>("ServicoId")
-                        .HasColumnType("uuid");
-
-                    b.Property<Guid>("UsuarioId")
-                        .HasColumnType("uuid");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("UsuarioId");
-
-                    b.ToTable("Empresas");
                 });
 
             modelBuilder.Entity("MundoFashion.Domain.Mensagem", b =>
@@ -157,14 +126,17 @@ namespace MundoFashion.Infrastructure.Data.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("timestamp without time zone");
 
-                    b.Property<Guid?>("EmpresaId")
-                        .HasColumnType("uuid");
+                    b.Property<string>("Descricao")
+                        .HasColumnType("text");
 
                     b.Property<string[]>("Imagens")
                         .HasColumnType("text[]");
 
                     b.Property<int>("Nicho")
                         .HasColumnType("integer");
+
+                    b.Property<Guid>("PrestadorId")
+                        .HasColumnType("uuid");
 
                     b.Property<int>("Tecnica")
                         .HasColumnType("integer");
@@ -178,15 +150,9 @@ namespace MundoFashion.Infrastructure.Data.Migrations
                     b.Property<int>("TipoRapport")
                         .HasColumnType("integer");
 
-                    b.Property<Guid?>("UsuarioId")
-                        .HasColumnType("uuid");
-
                     b.HasKey("Id");
 
-                    b.HasIndex("EmpresaId")
-                        .IsUnique();
-
-                    b.HasIndex("UsuarioId")
+                    b.HasIndex("PrestadorId")
                         .IsUnique();
 
                     b.ToTable("Servicos");
@@ -201,13 +167,15 @@ namespace MundoFashion.Infrastructure.Data.Migrations
                     b.Property<bool>("Aceita")
                         .HasColumnType("boolean");
 
+                    b.Property<long>("Codigo")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint")
+                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
+
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("timestamp without time zone");
 
                     b.Property<Guid>("DetalhesId")
-                        .HasColumnType("uuid");
-
-                    b.Property<Guid?>("EmpresaId")
                         .HasColumnType("uuid");
 
                     b.Property<Guid?>("PropostaId")
@@ -219,16 +187,14 @@ namespace MundoFashion.Infrastructure.Data.Migrations
                     b.Property<int>("Status")
                         .HasColumnType("integer");
 
-                    b.Property<Guid?>("UsuarioId")
+                    b.Property<Guid>("TomadorId")
                         .HasColumnType("uuid");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("EmpresaId");
-
                     b.HasIndex("ServicoId");
 
-                    b.HasIndex("UsuarioId");
+                    b.HasIndex("TomadorId");
 
                     b.ToTable("Solicitacoes");
                 });
@@ -239,11 +205,22 @@ namespace MundoFashion.Infrastructure.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
+                    b.Property<string>("AlexaUserId")
+                        .HasColumnType("text");
+
+                    b.Property<string>("AvatarLink")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("text")
+                        .HasDefaultValue("http://projeto-mundofashion-bucket.storage.googleapis.com/DefaultProfile.jpg");
+
                     b.Property<string>("Cpf")
                         .HasColumnType("text");
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("timestamp without time zone");
+
+                    b.Property<string>("DescricaoPessoal")
+                        .HasColumnType("text");
 
                     b.Property<string>("Email")
                         .HasColumnType("text");
@@ -251,14 +228,17 @@ namespace MundoFashion.Infrastructure.Data.Migrations
                     b.Property<string>("Nome")
                         .HasColumnType("text");
 
-                    b.Property<string>("Password")
+                    b.Property<string>("Role")
                         .HasColumnType("text");
 
-                    b.Property<string>("Role")
+                    b.Property<string>("Senha")
                         .HasColumnType("text");
 
                     b.Property<Guid>("ServicoId")
                         .HasColumnType("uuid");
+
+                    b.Property<bool>("UtilizaSuporteAlexa")
+                        .HasColumnType("boolean");
 
                     b.HasKey("Id");
 
@@ -274,17 +254,6 @@ namespace MundoFashion.Infrastructure.Data.Migrations
                         .IsRequired();
 
                     b.Navigation("Solicitacao");
-                });
-
-            modelBuilder.Entity("MundoFashion.Domain.Empresa", b =>
-                {
-                    b.HasOne("MundoFashion.Domain.Usuario", "Usuario")
-                        .WithMany("Empresas")
-                        .HasForeignKey("UsuarioId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Usuario");
                 });
 
             modelBuilder.Entity("MundoFashion.Domain.Mensagem", b =>
@@ -311,47 +280,32 @@ namespace MundoFashion.Infrastructure.Data.Migrations
 
             modelBuilder.Entity("MundoFashion.Domain.Servicos.ServicoEstampa", b =>
                 {
-                    b.HasOne("MundoFashion.Domain.Empresa", "Empresa")
+                    b.HasOne("MundoFashion.Domain.Usuario", "Prestador")
                         .WithOne("Servico")
-                        .HasForeignKey("MundoFashion.Domain.Servicos.ServicoEstampa", "EmpresaId");
+                        .HasForeignKey("MundoFashion.Domain.Servicos.ServicoEstampa", "PrestadorId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
-                    b.HasOne("MundoFashion.Domain.Usuario", "Usuario")
-                        .WithOne("Servico")
-                        .HasForeignKey("MundoFashion.Domain.Servicos.ServicoEstampa", "UsuarioId");
-
-                    b.Navigation("Empresa");
-
-                    b.Navigation("Usuario");
+                    b.Navigation("Prestador");
                 });
 
             modelBuilder.Entity("MundoFashion.Domain.Solicitacao", b =>
                 {
-                    b.HasOne("MundoFashion.Domain.Empresa", "Empresa")
-                        .WithMany("Solicitacoes")
-                        .HasForeignKey("EmpresaId");
-
                     b.HasOne("MundoFashion.Domain.Servicos.ServicoEstampa", "Servico")
                         .WithMany()
                         .HasForeignKey("ServicoId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("MundoFashion.Domain.Usuario", "Usuario")
-                        .WithMany("Solicitacoes")
-                        .HasForeignKey("UsuarioId");
-
-                    b.Navigation("Empresa");
+                    b.HasOne("MundoFashion.Domain.Usuario", "Tomador")
+                        .WithMany()
+                        .HasForeignKey("TomadorId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Servico");
 
-                    b.Navigation("Usuario");
-                });
-
-            modelBuilder.Entity("MundoFashion.Domain.Empresa", b =>
-                {
-                    b.Navigation("Servico");
-
-                    b.Navigation("Solicitacoes");
+                    b.Navigation("Tomador");
                 });
 
             modelBuilder.Entity("MundoFashion.Domain.Solicitacao", b =>
@@ -365,11 +319,7 @@ namespace MundoFashion.Infrastructure.Data.Migrations
 
             modelBuilder.Entity("MundoFashion.Domain.Usuario", b =>
                 {
-                    b.Navigation("Empresas");
-
                     b.Navigation("Servico");
-
-                    b.Navigation("Solicitacoes");
                 });
 #pragma warning restore 612, 618
         }

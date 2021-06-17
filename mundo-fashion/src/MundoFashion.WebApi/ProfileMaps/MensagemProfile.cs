@@ -1,10 +1,6 @@
 ﻿using AutoMapper;
 using MundoFashion.Domain;
-using MundoFashion.WebApi.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using MundoFashion.WebApi.Models.Mensagem;
 
 namespace MundoFashion.WebApi.ProfileMaps
 {
@@ -12,8 +8,7 @@ namespace MundoFashion.WebApi.ProfileMaps
     {
         public MensagemProfile()
         {
-            CreateMap<MensagemModel, Mensagem>();
-            CreateMap<MensagemModel, Mensagem>().ReverseMap();
+            CreateMap<Mensagem, MensagemModel>();
         }
     }
 }

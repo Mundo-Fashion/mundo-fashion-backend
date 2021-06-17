@@ -2,6 +2,8 @@
 using MundoFashion.Domain;
 using MundoFashion.Domain.Repositories;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace MundoFashion.Infrastructure.Data.Repositories
@@ -28,9 +30,6 @@ namespace MundoFashion.Infrastructure.Data.Repositories
         public void AdicionarSolicitacao(Solicitacao solicitacao)
         {
             _context.Solicitacoes.Add(solicitacao);
-
-            if (_context.Entry<DetalhesSolicitacao>(solicitacao.Detalhes).State == EntityState.Unchanged)
-                AdicionarDetalhesSolicitacao(solicitacao.Detalhes);
         }
 
         public void AtualizarDetalhesSolicitacao(DetalhesSolicitacao detalhes)
@@ -66,10 +65,10 @@ namespace MundoFashion.Infrastructure.Data.Repositories
         public async Task<Solicitacao> ObterSolicitacaoPorId(Guid id)
         {
             return await _context.Solicitacoes
-                .Include(s => s.Usuario)
-                .Include(s => s.Empresa)
+                .Include(s => s.Tomador)
                 .Include(s => s.Proposta)
                 .Include(s => s.Servico)
+                .ThenInclude(s => s.Prestador)
                 .Include(s => s.Detalhes)
                 .Include(s => s.Mensagens)
                 .AsNoTracking()
@@ -79,10 +78,19 @@ namespace MundoFashion.Infrastructure.Data.Repositories
         {
             _context.Mensagens.Add(mensagem);
         }
+        public Task<List<Solicitacao>> ObterSolicitacoes(Func<Solicitacao, bool> predicate)
+        {
+            return Task.FromResult<List<Solicitacao>>(_context.Solicitacoes
+                                                               .Include(s => s.Servico)
+                                                               .ThenInclude(s => s.Prestador)
+                                                               .Include(s => s.Tomador)
+                                                               .Include(s => s.Detalhes)
+                                                               .Where(predicate).ToList());
+        }
+        
         public void Dispose()
         {
             _context?.Dispose();
         }
-
     }
 }

@@ -1,4 +1,5 @@
-﻿using MundoFashion.Application.Services.Base;
+﻿using Microsoft.Extensions.Caching.Memory;
+using MundoFashion.Application.Services.Base;
 using MundoFashion.Core.Constants;
 using MundoFashion.Core.Notifications;
 using MundoFashion.Domain;
@@ -19,7 +20,7 @@ namespace MundoFashion.Application.Services
             _usuarioRepository = usuarioRepository;
         }
 
-        public async Task CriarUsuario(string nome, string email, string senha, string role = Roles.CLIENTE)
+        public async Task CriarUsuario(string nome, string cpf, string email, string senha, string role = Roles.CLIENTE)
         {
             if (await _usuarioRepository.UsuarioExiste(email))
             {
@@ -27,24 +28,11 @@ namespace MundoFashion.Application.Services
                 return;
             }
 
-            Usuario novoUsuario = new Usuario(nome, email, senha, role);
+            Usuario novoUsuario = new Usuario(nome, cpf, email, senha, role);
 
             if (!Validar<Usuario, UsuarioValidator>(novoUsuario)) return;
 
             _usuarioRepository.AdicionarUsuario(novoUsuario);
-            await _usuarioRepository.Commit().ConfigureAwait(false);
-        }
-
-        public async Task CriarEmpresa(Guid usuarioId, Empresa empresa)
-        {
-            if (!Validar<Empresa, EmpresaValidator>(empresa)) return;
-
-            Usuario usuario = await _usuarioRepository.ObterUsuarioPorId(usuarioId);
-
-            usuario.AdicionarEmpresa(empresa);
-
-            _usuarioRepository.AdicionarEmpresa(empresa);
-            _usuarioRepository.AtualizarUsuario(usuario);
             await _usuarioRepository.Commit().ConfigureAwait(false);
         }
 
@@ -103,30 +91,8 @@ namespace MundoFashion.Application.Services
             await _usuarioRepository.Commit().ConfigureAwait(false);
         }
 
-        public async Task AdicionarSolicitacaoUsuario(Guid usuarioId, Solicitacao solicitacao)
-        {
-            if (!Validar<Solicitacao, SolicitacaoValidator>(solicitacao)) return;
-
-            Usuario usuario = await _usuarioRepository.ObterUsuarioPorId(usuarioId);
-
-            if (usuario is null)
-            {
-                Notificar("Usuário não encontrado na base de dados.");
-                return;
-            }
-
-            usuario.AdicionarSolicitacao(solicitacao);
-
-            _usuarioRepository.AdicionarSolicitacao(solicitacao);
-            _usuarioRepository.AtualizarUsuario(usuario);
-
-            await _usuarioRepository.Commit().ConfigureAwait(false);
-        }
-
         public async Task AtualizarUsuario(Guid usuarioId, Usuario usuarioAtualizado)
         {
-            if (!Validar<Usuario, UsuarioValidator>(usuarioAtualizado)) return;
-
             Usuario usuario = await _usuarioRepository.ObterUsuarioPorId(usuarioId);
 
             if (usuario is null)
@@ -135,33 +101,13 @@ namespace MundoFashion.Application.Services
                 return;
             }
 
-            usuario.SetarCpf(usuarioAtualizado.Cpf);
+            usuario.AtualizarAvatar(usuarioAtualizado.AvatarLink);
+            usuario.AtualizarNome(usuarioAtualizado.Nome);
+            usuario.AtualizarSenha(usuarioAtualizado.Senha);
+            usuario.AtualizarDescricaoPessoal(usuarioAtualizado.DescricaoPessoal);
 
             _usuarioRepository.AtualizarUsuario(usuario);
-
             await _usuarioRepository.Commit().ConfigureAwait(false);
         }
-
-        //public async Task AtualizarSolicitacaoUsuario(Guid usuarioId, Guid solicitacaoId, Solicitacao solicitacaoAtualizada)
-        //{
-        //    Usuario usuario = await _usuarioRepository.ObterUsuarioPorIdComSolicitacoes(usuarioId).ConfigureAwait(false);
-
-        //    if (usuario is null)
-        //    {
-        //        Notificar("Usuário não encontrado na base de dados.");
-        //        return;
-        //    }
-
-        //    Solicitacao solicitacao = usuario.Solicitacoes.SingleOrDefault(u => u.Id == solicitacaoId);
-
-
-
-        //    usuario.AtualizarSolicitacao(solicitacao);
-
-        //    _usuarioRepository.AtualizarUsuario(usuario);
-        //    _usuarioRepository.AtualizarSolicitacao(solicitacao);
-
-        //    await _usuarioRepository.Commit().ConfigureAwait(false);
-        //}
     }
 }

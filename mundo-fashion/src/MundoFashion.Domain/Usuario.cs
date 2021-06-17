@@ -3,43 +3,49 @@ using MundoFashion.Core.Constants;
 using MundoFashion.Core.Interfaces;
 using MundoFashion.Domain.Servicos;
 using System;
-using System.Collections.Generic;
 
 namespace MundoFashion.Domain
 {
     public class Usuario : Entity, IAggregateRoot
     {
-        private readonly List<Empresa> _empresas;
-        private readonly List<Solicitacao> _solicitacoes;
-
+        public string AvatarLink { get; private set; } 
         public string Nome { get; private set; }
         public string Email { get; private set; }
-        public string Password { get; private set; }
+        public string Senha { get; private set; }
         public string Role { get; private set; }
         public string Cpf { get; private set; }
-        public IReadOnlyCollection<Empresa> Empresas => _empresas.AsReadOnly();
         public ServicoEstampa Servico { get; private set; }
         public Guid ServicoId { get; private set; }
-        public IReadOnlyCollection<Solicitacao> Solicitacoes => _solicitacoes.AsReadOnly();
+        public string DescricaoPessoal { get; private set; }
+        public string AlexaUserId { get; private set; }
+        public bool UtilizaSuporteAlexa { get; private set; }
 
-        private Usuario()
-        {
-            _solicitacoes = new List<Solicitacao>();
-        }
-        public Usuario(string nome, string email, string senha, string role)
+        private Usuario() { }
+        public Usuario(string nome, string cpf, string email, string senha, string role)
         {
             Nome = nome;
+            Cpf = cpf;
             Email = email;
-            Password = senha;
+            Senha = senha;
             Role = role;
-            _empresas = new List<Empresa>();
-            _solicitacoes = new List<Solicitacao>();
         }
 
-        public void AdicionarSolicitacao(Solicitacao solicitacao)
+        public void AtualizarNome(string nomeAtualizado)
         {
-            solicitacao.AssociarUsuario(Id);
-            _solicitacoes.Add(solicitacao);
+            if (!Nome.Equals(nomeAtualizado) && !string.IsNullOrWhiteSpace(nomeAtualizado))
+                Nome = nomeAtualizado;
+        }
+
+        public void AtualizarSenha(string senhaAtualizada)
+        {
+            if (!Senha.Equals(senhaAtualizada) && !string.IsNullOrWhiteSpace(senhaAtualizada))
+                Senha = senhaAtualizada;
+        }
+
+        public void AtualizarDescricaoPessoal(string descricaoPessoalAtualizada)
+        {
+            if (string.IsNullOrWhiteSpace(DescricaoPessoal) || !DescricaoPessoal.Equals(descricaoPessoalAtualizada))
+                DescricaoPessoal = descricaoPessoalAtualizada;
         }
 
         public void SetarCpf(string cpf)
@@ -50,18 +56,11 @@ namespace MundoFashion.Domain
             Cpf = cpf;
         }
 
-        public void AdicionarEmpresa(Empresa empresa)
-        {
-            empresa.AssociarUsuario(Id);
-            AlterarRole(Roles.CLIENTE_PRESTADOR);
-            _empresas.Add(empresa);
-        }
-
         public void AdicionarServico(ServicoEstampa servico)
         {
             AlterarRole(Roles.CLIENTE_PRESTADOR);
             ServicoId = servico.Id;
-            servico.AssociarUsuario(Id);
+            servico.AssociarUsuarioPrestador(Id);
         }
 
         public void AtualizarServico(ServicoEstampa servico)
@@ -89,5 +88,26 @@ namespace MundoFashion.Domain
 
         public bool PossuiServico()
             => !ServicoId.Equals(Guid.Empty);
+
+        public void AssociarAlexaUserId(string alexaUserId)
+           => AlexaUserId = alexaUserId;
+
+        public void DesassociarAlexaUserId()
+           => AlexaUserId = string.Empty;
+
+        public void AtivarSuporteAlexa()
+           => UtilizaSuporteAlexa = true;
+
+        public void DesativarSuporteAlexa()
+        {
+            UtilizaSuporteAlexa = false;
+            DesassociarAlexaUserId();
+        }
+
+        public void AtualizarAvatar(string novoLinkAvatar)
+        {
+            if (!AvatarLink.Equals(novoLinkAvatar) && !string.IsNullOrWhiteSpace(novoLinkAvatar))
+                AvatarLink = novoLinkAvatar;
+        }
     }
 }

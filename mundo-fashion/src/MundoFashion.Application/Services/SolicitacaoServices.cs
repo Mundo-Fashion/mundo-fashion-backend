@@ -1,4 +1,5 @@
 ﻿using MundoFashion.Application.Services.Base;
+using MundoFashion.Core.Enums.Solicitacao;
 using MundoFashion.Core.Notifications;
 using MundoFashion.Domain;
 using MundoFashion.Domain.Repositories;
@@ -16,6 +17,17 @@ namespace MundoFashion.Application.Services
             _solicitacaoRepository = solicitacaoRepository;
         }
 
+        public async Task AdicionarSolicitacao(Solicitacao solicitacao, DetalhesSolicitacao detalhesSolicitacao)
+        {
+            if (!Validar<Solicitacao, SolicitacaoValidator>(solicitacao)) return;
+            if (!Validar<DetalhesSolicitacao, DetalhesSolicitacaoValidator>(detalhesSolicitacao)) return;
+
+            _solicitacaoRepository.AdicionarSolicitacao(solicitacao);
+            _solicitacaoRepository.AdicionarDetalhesSolicitacao(detalhesSolicitacao);
+
+            await _solicitacaoRepository.Commit().ConfigureAwait(false);
+        }
+
         public async Task CancelarSolicitacao(Guid solicitacaoId)
         {
             Solicitacao solicitacao = await _solicitacaoRepository.ObterSolicitacaoPorId(solicitacaoId).ConfigureAwait(false);
@@ -26,8 +38,15 @@ namespace MundoFashion.Application.Services
                 return;
             }
 
-            solicitacao.Cancelar();
-            
+            if (solicitacao.Status == StatusSolicitacao.Entregue || solicitacao.Status == StatusSolicitacao.Finalizado)
+            {
+                Notificar("Não é possível cancelar solicitação entregues ou já finalizadas.");
+                return;
+            }
+
+            if (solicitacao.Status != StatusSolicitacao.Cancelada)
+                solicitacao.Cancelar();
+
             _solicitacaoRepository.AtualizarSolicitacao(solicitacao);
             await _solicitacaoRepository.Commit().ConfigureAwait(false);
         }
@@ -49,6 +68,28 @@ namespace MundoFashion.Application.Services
             await _solicitacaoRepository.Commit().ConfigureAwait(false);
         }
 
+        public async Task RecusarSolicitacao(Guid solicitacaoId)
+        {
+            Solicitacao solicitacao = await _solicitacaoRepository.ObterSolicitacaoPorId(solicitacaoId).ConfigureAwait(false);
+
+            if (solicitacao is null)
+            {
+                Notificar("Solicitação não encontrada.");
+                return;
+            }
+
+            if (solicitacao.Status == StatusSolicitacao.Entregue || solicitacao.Status == StatusSolicitacao.Finalizado)
+            {
+                Notificar("Não é possível recusar solicitação entregues ou já finalizadas.");
+                return;
+            }
+
+            solicitacao.RecusarSolicitacao();
+
+            _solicitacaoRepository.AtualizarSolicitacao(solicitacao);
+            await _solicitacaoRepository.Commit().ConfigureAwait(false);
+        }
+
 
         public async Task AdicionarProposta(Guid solicitacaoId, Proposta proposta)
         {
@@ -62,9 +103,16 @@ namespace MundoFashion.Application.Services
                 return;
             }
 
-            solicitacao.AdicionarProposta(proposta);
-            solicitacao.IniciarNegociacao();
+            if (!solicitacao.Aceita)
+            {
+                Notificar("Solicitação ainda não aceita pelo prestador.");
+                return;
+            }
 
+            solicitacao.AdicionarProposta(proposta);
+            solicitacao.AnalisarProposta();
+
+            _solicitacaoRepository.AdicionarProposta(proposta);
             _solicitacaoRepository.AtualizarSolicitacao(solicitacao);
             await _solicitacaoRepository.Commit().ConfigureAwait(false);
         }
@@ -81,7 +129,13 @@ namespace MundoFashion.Application.Services
                 return;
             }
 
-            if(!solicitacao.PossuiProposta())
+            if (!solicitacao.Aceita)
+            {
+                Notificar("Solicitação ainda não aceita pelo prestador.");
+                return;
+            }
+
+            if (!solicitacao.PossuiProposta())
             {
                 Notificar("Solicitação não possui proposta.");
                 return;
@@ -101,6 +155,12 @@ namespace MundoFashion.Application.Services
             if (solicitacao is null)
             {
                 Notificar("Solicitação não encontrada.");
+                return;
+            }
+
+            if (!solicitacao.Aceita)
+            {
+                Notificar("Solicitação ainda não aceita pelo prestador.");
                 return;
             }
 
@@ -128,6 +188,12 @@ namespace MundoFashion.Application.Services
                 return;
             }
 
+            if (!solicitacao.Aceita)
+            {
+                Notificar("Solicitação ainda não aceita pelo prestador.");
+                return;
+            }
+
             if (!solicitacao.PossuiProposta())
             {
                 Notificar("Solicitação não possui proposta.");
@@ -135,8 +201,75 @@ namespace MundoFashion.Application.Services
             }
 
             solicitacao.Proposta?.RecusarProposta();
+            solicitacao.IniciarNegociacao();
 
             _solicitacaoRepository.AtualizarProposta(solicitacao.Proposta);
+            _solicitacaoRepository.AtualizarSolicitacao(solicitacao);
+            await _solicitacaoRepository.Commit().ConfigureAwait(false);
+        }
+
+        public async Task PagarSolicitacao(Guid solicitacaoId)
+        {
+            Solicitacao solicitacao = await _solicitacaoRepository.ObterSolicitacaoPorId(solicitacaoId).ConfigureAwait(false);
+
+            if (solicitacao is null)
+            {
+                Notificar("Solicitação não encontrada.");
+                return;
+            }
+
+            if (!solicitacao.Aceita)
+            {
+                Notificar("Solicitação ainda não aceita pelo prestador.");
+                return;
+            }
+
+            solicitacao.Pagar();
+
+            _solicitacaoRepository.AtualizarSolicitacao(solicitacao);
+            await _solicitacaoRepository.Commit().ConfigureAwait(false);
+        }
+
+        public async Task EntregarSolicitacao(Guid solicitacaoId)
+        {
+            Solicitacao solicitacao = await _solicitacaoRepository.ObterSolicitacaoPorId(solicitacaoId).ConfigureAwait(false);
+
+            if (solicitacao is null)
+            {
+                Notificar("Solicitação não encontrada.");
+                return;
+            }
+
+            if (!solicitacao.Aceita)
+            {
+                Notificar("Solicitação ainda não aceita pelo prestador.");
+                return;
+            }
+
+            solicitacao.Entregue();
+
+            _solicitacaoRepository.AtualizarSolicitacao(solicitacao);
+            await _solicitacaoRepository.Commit().ConfigureAwait(false);
+        }
+
+        public async Task FinalizarSolicitacao(Guid solicitacaoId)
+        {
+            Solicitacao solicitacao = await _solicitacaoRepository.ObterSolicitacaoPorId(solicitacaoId).ConfigureAwait(false);
+
+            if (solicitacao is null)
+            {
+                Notificar("Solicitação não encontrada.");
+                return;
+            }
+
+            if (!solicitacao.Aceita)
+            {
+                Notificar("Solicitação ainda não aceita pelo prestador.");
+                return;
+            }
+
+            solicitacao.Finalizar();
+
             _solicitacaoRepository.AtualizarSolicitacao(solicitacao);
             await _solicitacaoRepository.Commit().ConfigureAwait(false);
         }
