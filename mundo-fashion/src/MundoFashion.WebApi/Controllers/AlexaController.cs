@@ -126,6 +126,8 @@ namespace MundoFashion.WebApi.Controllers
         {
             int index = mensagem.LastIndexOf(separador);
 
+            if (index == -1) return mensagem;
+
             char[] mensagemCharArray = mensagem.ToCharArray();
 
             mensagemCharArray[index] = 'e';
