@@ -48,7 +48,7 @@ namespace MundoFashion.Infrastructure.Data.Repositories
 
         public async Task<Usuario> ObterUsuarioPorUserNameSenha(string email, string senha)
         {
-            return await _context.Usuarios.Where(u => u.Email.Equals(email) && u.Password.Equals(senha)).SingleOrDefaultAsync();
+            return await _context.Usuarios.Where(u => u.Email.Equals(email) && u.Senha.Equals(senha)).SingleOrDefaultAsync();
         }
         public void AdicionarServico(ServicoEstampa servico)
         {

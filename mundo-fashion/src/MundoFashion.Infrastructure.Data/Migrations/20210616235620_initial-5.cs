@@ -4,7 +4,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace MundoFashion.Infrastructure.Data.Migrations
 {
-    public partial class initial3 : Migration
+    public partial class initial5 : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -13,12 +13,14 @@ namespace MundoFashion.Infrastructure.Data.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    AvatarLink = table.Column<string>(type: "text", nullable: true, defaultValue: "http://projeto-mundofashion-bucket.storage.googleapis.com/DefaultProfile.jpg"),
                     Nome = table.Column<string>(type: "text", nullable: true),
                     Email = table.Column<string>(type: "text", nullable: true),
-                    Password = table.Column<string>(type: "text", nullable: true),
+                    Senha = table.Column<string>(type: "text", nullable: true),
                     Role = table.Column<string>(type: "text", nullable: true),
                     Cpf = table.Column<string>(type: "text", nullable: true),
                     ServicoId = table.Column<Guid>(type: "uuid", nullable: false),
+                    DescricaoPessoal = table.Column<string>(type: "text", nullable: true),
                     AlexaUserId = table.Column<string>(type: "text", nullable: true),
                     UtilizaSuporteAlexa = table.Column<bool>(type: "boolean", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "timestamp without time zone", nullable: false)
@@ -38,6 +40,7 @@ namespace MundoFashion.Infrastructure.Data.Migrations
                     TecnicaEstamparia = table.Column<int>(type: "integer", nullable: false),
                     Nicho = table.Column<int>(type: "integer", nullable: false),
                     TipoRapport = table.Column<int>(type: "integer", nullable: false),
+                    Descricao = table.Column<string>(type: "text", nullable: true),
                     CreatedAt = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
                     Active = table.Column<bool>(type: "boolean", nullable: false),
                     Imagens = table.Column<string[]>(type: "text[]", nullable: true),

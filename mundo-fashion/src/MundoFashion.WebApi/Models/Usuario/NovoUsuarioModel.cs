@@ -4,7 +4,7 @@ using MundoFashion.WebApi.Models.Solicitacao;
 
 namespace MundoFashion.WebApi.Models.Usuario
 {
-    public record UsuarioModel
+    public record NovoUsuarioModel
     {
         public Guid Id { get; set; }
         public string Nome { get; set; }

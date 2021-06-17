@@ -8,6 +8,7 @@ using MundoFashion.Application.Services;
 using MundoFashion.Core.Constants;
 using MundoFashion.Core.Notifications;
 using MundoFashion.Core.Storage;
+using MundoFashion.Domain;
 using MundoFashion.Domain.Repositories;
 using MundoFashion.Domain.Servicos;
 using MundoFashion.WebApi.Controllers.Base;
@@ -37,7 +38,7 @@ namespace MundoFashion.WebApi.Controllers
         [HttpPost]
         [Route("criar-usuario")]
         [AllowAnonymous]
-        public async Task<ActionResult<string>> CriarUsuario(UsuarioModel usuario)
+        public async Task<ActionResult<string>> CriarUsuario(NovoUsuarioModel usuario)
         {
             await _usuarioServices.CriarUsuario(usuario.Nome, usuario.Cpf, usuario.Email, usuario.Senha)
                                   .ConfigureAwait(false);
@@ -53,7 +54,8 @@ namespace MundoFashion.WebApi.Controllers
                                                             servico.TipoTecnica,
                                                             servico.TipoTecnicaEstamparia,
                                                             servico.TipoNicho,
-                                                            servico.TipoRapport);
+                                                            servico.TipoRapport,
+                                                            servico.DescricaoServico);
 
             foreach (IFormFile imagem in servico.ImagensUpload)
             {
@@ -96,6 +98,24 @@ namespace MundoFashion.WebApi.Controllers
                                   .ConfigureAwait(false);
 
             return RespostaCustomizada("Serviço removido com sucesso.");
+        }
+
+        [HttpPut]
+        [Route("atualizar-usuario")]
+        public async Task<ActionResult<string>> AtualizarUsuario([FromForm] UsuarioAtualizadoModel usuarioAtualizado)
+        {
+            Usuario usuario = _mapper.Map<Usuario>(usuarioAtualizado);
+
+            if(usuarioAtualizado.ImagemAvatar?.Length > 0)
+            {
+                string nomeImagem = $"{Guid.NewGuid()}_{usuarioAtualizado.ImagemAvatar.FileName}";
+                usuario.AtualizarAvatar(await _cloudStorage.UploadFileAsync(usuarioAtualizado.ImagemAvatar, nomeImagem).ConfigureAwait(false));
+            }
+
+            await _usuarioServices.AtualizarUsuario(UsuarioId, usuario)
+                                  .ConfigureAwait(false);
+
+            return RespostaCustomizada("Usuário atualizado.");
         }
     }
 }

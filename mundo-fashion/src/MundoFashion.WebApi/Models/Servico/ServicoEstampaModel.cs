@@ -11,6 +11,7 @@ namespace MundoFashion.WebApi.Models
         public string[] TipoTecnicaEstamparia { get; set; }
         public string[] TipoNicho { get; set; }
         public string[] TipoRapport { get; set; }
+        public string Descricao { get; set; }
         public PrestadorTomadorModel Prestador { get; set; }
         public string[] Imagens { get; set; }
     }

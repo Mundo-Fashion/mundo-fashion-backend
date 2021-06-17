@@ -10,8 +10,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace MundoFashion.Infrastructure.Data.Migrations
 {
     [DbContext(typeof(MundoFashionContext))]
-    [Migration("20210610185407_initial-3")]
-    partial class initial3
+    [Migration("20210616235620_initial-5")]
+    partial class initial5
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -128,6 +128,9 @@ namespace MundoFashion.Infrastructure.Data.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("timestamp without time zone");
 
+                    b.Property<string>("Descricao")
+                        .HasColumnType("text");
+
                     b.Property<string[]>("Imagens")
                         .HasColumnType("text[]");
 
@@ -207,11 +210,19 @@ namespace MundoFashion.Infrastructure.Data.Migrations
                     b.Property<string>("AlexaUserId")
                         .HasColumnType("text");
 
+                    b.Property<string>("AvatarLink")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("text")
+                        .HasDefaultValue("http://projeto-mundofashion-bucket.storage.googleapis.com/DefaultProfile.jpg");
+
                     b.Property<string>("Cpf")
                         .HasColumnType("text");
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("timestamp without time zone");
+
+                    b.Property<string>("DescricaoPessoal")
+                        .HasColumnType("text");
 
                     b.Property<string>("Email")
                         .HasColumnType("text");
@@ -219,10 +230,10 @@ namespace MundoFashion.Infrastructure.Data.Migrations
                     b.Property<string>("Nome")
                         .HasColumnType("text");
 
-                    b.Property<string>("Password")
+                    b.Property<string>("Role")
                         .HasColumnType("text");
 
-                    b.Property<string>("Role")
+                    b.Property<string>("Senha")
                         .HasColumnType("text");
 
                     b.Property<Guid>("ServicoId")

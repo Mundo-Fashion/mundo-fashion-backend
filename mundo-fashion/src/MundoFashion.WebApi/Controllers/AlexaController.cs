@@ -35,7 +35,7 @@ namespace MundoFashion.WebApi.Controllers
             Guid usuarioId = _cache.Get<Guid>(passcode);  
 
             if (usuarioId == Guid.Empty)
-                return BadRequest("Código informado inválido ou expirado, tente novamente ou solicite um novo código.");  
+                return BadRequest("Código informado inválido ou expirado, tente novamente ou solicit novoe um código.");  
 
             Usuario usuario = await _usuarioRepository.ObterUsuarioPorId(usuarioId).ConfigureAwait(false);   
 
@@ -66,7 +66,7 @@ namespace MundoFashion.WebApi.Controllers
         {
             string passcode = GetPasscode();
 
-            _cache.Set<Guid>(passcode, Guid.NewGuid(), TimeSpan.FromMinutes(1));
+            _cache.Set<Guid>(passcode, UsuarioId, TimeSpan.FromMinutes(1));
 
             return await Task.FromResult(passcode);
         }

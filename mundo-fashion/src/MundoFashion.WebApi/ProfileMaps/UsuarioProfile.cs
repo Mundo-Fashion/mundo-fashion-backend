@@ -15,7 +15,9 @@ namespace MundoFashion.WebApi.ProfileMaps
             CreateMap<Usuario, UsuarioModel>()
                 .AfterMap((src, dest, context) => dest.Servico = context.Mapper.Map<ServicoEstampa, ServicoEstampaModel>(src.Servico));
 
-            CreateMap<Usuario, PrestadorTomadorModel>();                
+            CreateMap<Usuario, PrestadorTomadorModel>();
+
+            CreateMap<UsuarioAtualizadoModel, Usuario>();
         }
     }
 }
