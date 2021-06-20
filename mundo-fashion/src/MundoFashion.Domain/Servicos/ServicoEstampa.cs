@@ -62,5 +62,11 @@ namespace MundoFashion.Domain.Servicos
         {
             TipoRapport = tipoRapport;
         }
+
+        public void AtualizarDescricao(string descricao)
+        {
+            if (!string.IsNullOrWhiteSpace(descricao))
+                Descricao = descricao;
+        }
     }
 }
