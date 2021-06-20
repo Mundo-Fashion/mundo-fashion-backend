@@ -62,7 +62,7 @@ namespace MundoFashion.Infrastructure.Data.Repositories
 
         public async Task<ServicoEstampa> ObterServico(Guid id)
         {
-            return await _context.Servicos.SingleOrDefaultAsync(s => s.Id == id);
+            return await _context.Servicos.Include(s => s.Prestador).SingleOrDefaultAsync(s => s.Id == id);
         }
 
         public async Task<bool> Commit()
