@@ -12,8 +12,7 @@ using MundoFashion.WebApi.Controllers.Base;
 using MundoFashion.WebApi.Models;
 
 namespace MundoFashion.WebApi.Controllers
-{
-    [Authorize]
+{   
     public class ServicoController : ApiControllerBase
     {
         private readonly IServicoRepository _servicoRepository;

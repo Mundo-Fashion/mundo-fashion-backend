@@ -91,8 +91,6 @@ namespace MundoFashion.WebApi.Controllers
 
             Usuario usuario = await _usuarioRepository.ObterUsuarioPorAlexaUserId(alexaUserId).ConfigureAwait(false);
 
-            _logger.LogInformation($"Usuario id - {usuario.Id}");
-
             long[] codigos = _solicitacaoRepository.ObterSolicitacoesQuery(s => s.TomadorId == usuario.Id).Select(s => s.Codigo).ToArray();
 
             _logger.LogInformation($"Quantidade de códigos - {codigos.Length}");

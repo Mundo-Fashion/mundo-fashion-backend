@@ -5,14 +5,12 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Caching.Memory;
 using MundoFashion.Application.Services;
-using MundoFashion.Core.Constants;
 using MundoFashion.Core.Notifications;
 using MundoFashion.Core.Storage;
 using MundoFashion.Domain;
 using MundoFashion.Domain.Repositories;
 using MundoFashion.Domain.Servicos;
 using MundoFashion.WebApi.Controllers.Base;
-using MundoFashion.WebApi.Models;
 using MundoFashion.WebApi.Models.Servico;
 using MundoFashion.WebApi.Models.Usuario;
 using System;
@@ -27,7 +25,7 @@ namespace MundoFashion.WebApi.Controllers
         private readonly IUsuarioRepository _usuarioRepository;
         private readonly IMapper _mapper;
         private readonly ICloudStorage _cloudStorage;
-        public UsuarioController(INotificationHandler<Notificacao> notificacoes, UsuarioServices usuarioServices, IMapper mapper, IUsuarioRepository usuarioRepository, ICloudStorage cloudStorage, IMemoryCache cache) : base(notificacoes)
+        public UsuarioController(INotificationHandler<Notificacao> notificacoes, UsuarioServices usuarioServices, IMapper mapper, IUsuarioRepository usuarioRepository, ICloudStorage cloudStorage) : base(notificacoes)
         {
             _usuarioServices = usuarioServices;
             _mapper = mapper;
@@ -71,16 +69,14 @@ namespace MundoFashion.WebApi.Controllers
 
         [HttpGet]
         [Route("obter-usuario/{id:guid}")]
-        [AllowAnonymous]
         public async Task<ActionResult<UsuarioModel>> ObterUsuario(Guid id)
         {
             return _mapper.Map<UsuarioModel>(await _usuarioRepository.ObterUsuarioCompletoPorId(id).ConfigureAwait(false));
         }
 
         [HttpPut]
-        [Route("atualizar-servico-usuario")]
-        [Authorize(Roles = Roles.CLIENTE_PRESTADOR)]
-        public async Task<ActionResult<string>> AtualizarServicoUsuario([FromBody] ServicoEstampaModel servico)
+        [Route("atualizar-servico-usuario")]        
+        public async Task<ActionResult<string>> AtualizarServicoUsuario([FromForm] ServicoEstampaAtualizadoModel servico)
         {
             ServicoEstampa servicoAtualizado = _mapper.Map<ServicoEstampa>(servico);
 
