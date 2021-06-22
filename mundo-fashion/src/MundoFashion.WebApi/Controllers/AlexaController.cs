@@ -93,9 +93,10 @@ namespace MundoFashion.WebApi.Controllers
 
             long[] codigos = _solicitacaoRepository.ObterSolicitacoes(s => s.TomadorId == usuario.Id).Select(s => s.Codigo).ToArray();
 
-            _logger.LogInformation($"Quantidade de códigos - {codigos.Length}");
+            string mensagem = "Você não possui solicitações para serem exibidas.";
 
-            string mensagem = $"Você possui os seguintes códigos de solicitações {AjustarMensagemAlexaListagem(',', string.Join(", ", codigos))}";
+            if (codigos.Any())
+                mensagem = $"Você possui solicitações de código {AjustarMensagemAlexaListagem(',', string.Join(", ", codigos))}";
 
             return RespostaCustomizada(mensagem);
         }
