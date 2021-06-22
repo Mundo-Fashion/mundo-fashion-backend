@@ -35,13 +35,14 @@ namespace MundoFashion.WebApi.Controllers
 
         [HttpGet]
         [Route("obter-solicitacoes-prestador/{prestadorId:guid}")]
-        public async Task<ActionResult<List<SolicitacaoModel>>> ObterSolicitacoesPorPrestador(Guid prestadorId)
-            => RespostaCustomizada(_mapper.Map<List<SolicitacaoModel>>(await _solicitacaoRepository.ObterSolicitacoes(s => s.Servico.PrestadorId == prestadorId)));
+        public ActionResult<List<SolicitacaoModel>> ObterSolicitacoesPorPrestador(Guid prestadorId)
+            => RespostaCustomizada(_mapper.Map<List<SolicitacaoModel>>(_solicitacaoRepository.ObterSolicitacoes(s => s.Servico.PrestadorId == prestadorId)));
 
         [HttpGet]
         [Route("obter-solicitacoes-tomador/{tomadorId:guid}")]
-        public async Task<ActionResult<List<SolicitacaoModel>>> ObterSolicitacoesPorTomador(Guid tomadorId)
-            => RespostaCustomizada(_mapper.Map<List<SolicitacaoModel>>(await _solicitacaoRepository.ObterSolicitacoes(s => s.TomadorId == tomadorId)));
+        public ActionResult<List<SolicitacaoModel>> ObterSolicitacoesPorTomador(Guid tomadorId)
+            => RespostaCustomizada(_mapper.Map<List<SolicitacaoModel>>(_solicitacaoRepository.ObterSolicitacoes(s => s.TomadorId == tomadorId)));
+
 
         [HttpPost]
         [Route("criar-solicitacao")]
@@ -135,7 +136,7 @@ namespace MundoFashion.WebApi.Controllers
         [HttpPut]
         [Route("pagar-solicitacao/{solicitacaoId:guid}")]
         public async Task<ActionResult<string>> PagarSolicitacao(Guid solicitacaoId)
-        {            
+        {
             await _solicitacaoServices.PagarSolicitacao(solicitacaoId);
 
             return RespostaCustomizada("Solicitação paga.");

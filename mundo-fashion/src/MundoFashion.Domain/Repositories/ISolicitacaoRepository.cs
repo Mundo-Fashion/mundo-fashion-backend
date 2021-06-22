@@ -11,7 +11,7 @@ namespace MundoFashion.Domain.Repositories
         void AdicionarSolicitacao(Solicitacao solicitacao);
         void AtualizarSolicitacao(Solicitacao solicitacao);
         Task<Solicitacao> ObterSolicitacaoPorId(Guid id);
-        Task<List<Solicitacao>> ObterSolicitacoes(Func<Solicitacao, bool> predicate);
+        List<Solicitacao> ObterSolicitacoes(Func<Solicitacao, bool> predicate);
         IQueryable<Solicitacao> ObterSolicitacoesQuery(Func<Solicitacao, bool> predicate);
         void AdicionarDetalhesSolicitacao(DetalhesSolicitacao detalhes);
         void AtualizarDetalhesSolicitacao(DetalhesSolicitacao detalhes);

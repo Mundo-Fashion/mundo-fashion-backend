@@ -15,8 +15,7 @@ namespace MundoFashion.WebApi.ProfileMaps
             CreateMap<Solicitacao, SolicitacaoModel>()
                 .ForMember(s => s.Status, s => s.MapFrom(x => EnumUtils.ObterValorEmTexto(x.Status)))    
                 .AfterMap((src, dest, context) => dest.Tomador = context.Mapper.Map<Usuario, PrestadorTomadorModel>(src.Tomador));                
-
-            CreateMap<List<Solicitacao>, List<SolicitacaoModel>>();                
+                        
         }
     }
 }

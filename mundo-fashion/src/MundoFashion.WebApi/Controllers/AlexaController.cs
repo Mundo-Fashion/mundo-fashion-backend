@@ -91,7 +91,7 @@ namespace MundoFashion.WebApi.Controllers
 
             Usuario usuario = await _usuarioRepository.ObterUsuarioPorAlexaUserId(alexaUserId).ConfigureAwait(false);
 
-            long[] codigos = _solicitacaoRepository.ObterSolicitacoesQuery(s => s.TomadorId == usuario.Id).Select(s => s.Codigo).ToArray();
+            long[] codigos = _solicitacaoRepository.ObterSolicitacoes(s => s.TomadorId == usuario.Id).Select(s => s.Codigo).ToArray();
 
             _logger.LogInformation($"Quantidade de códigos - {codigos.Length}");
 
@@ -108,7 +108,7 @@ namespace MundoFashion.WebApi.Controllers
                 BadRequest("As informações enviadas não podem ser vazia, entre em contato com a administração do mundo fashion.");
 
             Usuario usuario = await _usuarioRepository.ObterUsuarioPorAlexaUserId(alexaUserId).ConfigureAwait(false);
-            Solicitacao solicitacao = (await _solicitacaoRepository.ObterSolicitacoes(s => s.TomadorId == usuario.Id && s.Codigo == codigo).ConfigureAwait(false)).SingleOrDefault();
+            Solicitacao solicitacao = _solicitacaoRepository.ObterSolicitacoes(s => s.TomadorId == usuario.Id && s.Codigo == codigo).SingleOrDefault();
 
             return RespostaCustomizada($"A solicitação está com status {EnumUtils.ObterValorEmTexto(solicitacao.Status)}");
         }

@@ -78,14 +78,13 @@ namespace MundoFashion.Infrastructure.Data.Repositories
         {
             _context.Mensagens.Add(mensagem);
         }
-        public Task<List<Solicitacao>> ObterSolicitacoes(Func<Solicitacao, bool> predicate)
+        public List<Solicitacao> ObterSolicitacoes(Func<Solicitacao, bool> predicate)
         {
-            return Task.FromResult<List<Solicitacao>>(_context.Solicitacoes
-                                                               .Include(s => s.Servico)
-                                                               .ThenInclude(s => s.Prestador)
-                                                               .Include(s => s.Tomador)
-                                                               .Include(s => s.Detalhes)
-                                                               .Where(predicate).ToList());
+            return _context.Solicitacoes.Include(s => s.Servico)
+                                        .ThenInclude(s => s.Prestador)
+                                        .Include(s => s.Tomador)
+                                        .Include(s => s.Detalhes)
+                                        .Where(predicate).ToList();
         }
 
         public IQueryable<Solicitacao> ObterSolicitacoesQuery(Func<Solicitacao, bool> predicate)
