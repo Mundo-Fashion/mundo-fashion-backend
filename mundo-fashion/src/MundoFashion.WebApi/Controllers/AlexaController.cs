@@ -35,6 +35,9 @@ namespace MundoFashion.WebApi.Controllers
 
             Usuario usuario = await _usuarioRepository.ObterUsuarioPorAlexaUserId(alexaUserId).ConfigureAwait(false);
 
+            if (usuario is null)
+                return RespostaCustomizada("Usuário não encontrado na base de dados.");
+
             usuario.DesativarSuporteAlexa();
 
             _usuarioRepository.AtualizarUsuario(usuario);
@@ -82,7 +85,7 @@ namespace MundoFashion.WebApi.Controllers
 
             Usuario usuario = await _usuarioRepository.ObterUsuarioPorAlexaUserId(alexaUserId).ConfigureAwait(false);
 
-            return RespostaCustomizada(usuario != null && usuario.UtilizaSuporteAlexa);
+            return RespostaCustomizada(usuario != null);
         }
 
         [HttpGet, Authorize]
