@@ -73,6 +73,10 @@ namespace MundoFashion.Domain
             Servico.AtualizarTipoNicho(servico.Nicho);
             Servico.AtualizarTipoRapport(servico.TipoRapport);
             Servico.AtualizarDescricao(servico.Descricao);
+
+            Servico.RemoverImagens();
+            foreach (var item in servico.Imagens)
+                Servico.AdicionarImagem(item);
         }
 
         public void AlterarRole(string novaRole)

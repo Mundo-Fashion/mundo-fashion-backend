@@ -97,6 +97,12 @@ namespace MundoFashion.WebApi.Controllers
         {
             ServicoEstampa servicoAtualizado = _mapper.Map<ServicoEstampa>(servico);
 
+            foreach (IFormFile imagem in servico.ImagensUpload)
+            {
+                string nomeImagem = $"{Guid.NewGuid()}_{imagem.FileName}";
+                servicoAtualizado.AdicionarImagem(await _cloudStorage.UploadFileAsync(imagem, nomeImagem).ConfigureAwait(false));
+            }
+
             await _usuarioServices.AtualizarServicoUsuario(UsuarioId, servicoAtualizado)
                                   .ConfigureAwait(false);
 

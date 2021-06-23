@@ -29,5 +29,11 @@ namespace MundoFashion.Domain.Servicos
             _imagens.Remove(imagem);
             Imagens = _imagens.ToArray();
         }
+
+        public void RemoverImagens()
+        {
+            _imagens.Clear();
+            Imagens = _imagens.ToArray();
+        }
     }
 }
