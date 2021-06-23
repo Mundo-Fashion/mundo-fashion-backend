@@ -27,8 +27,8 @@ namespace MundoFashion.WebApi.Controllers
 
 
         [HttpPut]
-        [Route("desvincular-alexa/{alexaUserId:string}")]
-        public async Task<ActionResult<string>> DesvincularAlexa(string alexaUserId)
+        [Route("desvincular-alexa")]
+        public async Task<ActionResult<string>> DesvincularAlexa([FromBody] string alexaUserId)
         {
             if (string.IsNullOrWhiteSpace(alexaUserId))
                 return BadRequest("As informações enviadas não podem ser vazia, verifique o código e tente novamente.");
