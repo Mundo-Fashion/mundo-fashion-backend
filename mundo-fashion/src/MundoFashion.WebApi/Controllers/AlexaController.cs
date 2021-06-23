@@ -23,28 +23,7 @@ namespace MundoFashion.WebApi.Controllers
             _cache = cache;
             _usuarioRepository = usuarioRepository;
             _solicitacaoRepository = solicitacaoRepository;
-        }
-
-
-        [HttpPut]
-        [Route("desvincular-alexa")]
-        public async Task<ActionResult<string>> DesvincularAlexa([FromBody] string alexaUserId)
-        {
-            if (string.IsNullOrWhiteSpace(alexaUserId))
-                return BadRequest("As informações enviadas não podem ser vazia, verifique o código e tente novamente.");
-
-            Usuario usuario = await _usuarioRepository.ObterUsuarioPorAlexaUserId(alexaUserId).ConfigureAwait(false);
-
-            if (usuario is null)
-                return RespostaCustomizada("Usuário não encontrado na base de dados.");
-
-            usuario.DesativarSuporteAlexa();
-
-            _usuarioRepository.AtualizarUsuario(usuario);
-            await _usuarioRepository.Commit().ConfigureAwait(false);
-
-            return RespostaCustomizada("Alexa desvinculada.");
-        }
+        }        
 
         [HttpPost]
         [Route("registrar-alexa")]
