@@ -6,6 +6,8 @@ namespace MundoFashion.Core.Enums.Servicos.Estampa
     [Flags]
     public enum TipoTecnicaEstampa
     {
+        [Description(nameof(Simplificada))]
+        Simplificada = 0,
         [Description(nameof(Silk))]
         Silk = 1,
         [Description(nameof(Digital))]

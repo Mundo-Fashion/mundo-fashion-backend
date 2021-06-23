@@ -6,6 +6,8 @@ namespace MundoFashion.Core.Enums.Servicos.Estampa
     [Flags]
     public enum TipoRapport
     {
+        [Description(nameof(Simplificada))]
+        Simplificada = 0,
         [Description("16x16")]
         Rapport16x = 1,
         [Description("32x32")]
