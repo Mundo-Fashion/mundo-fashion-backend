@@ -1,16 +1,15 @@
-using System;
-using System.Linq;
-using System.Threading.Tasks;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Caching.Memory;
-using Microsoft.Extensions.Logging;
 using MundoFashion.Core.Notifications;
 using MundoFashion.Core.Utils;
 using MundoFashion.Domain;
 using MundoFashion.Domain.Repositories;
 using MundoFashion.WebApi.Controllers.Base;
+using System;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace MundoFashion.WebApi.Controllers
 {
@@ -19,13 +18,11 @@ namespace MundoFashion.WebApi.Controllers
         private readonly IMemoryCache _cache;
         private readonly IUsuarioRepository _usuarioRepository;
         private readonly ISolicitacaoRepository _solicitacaoRepository;
-        private readonly ILogger<AlexaController> _logger;
-        public AlexaController(INotificationHandler<Notificacao> notificacoes, IMemoryCache cache, IUsuarioRepository usuarioRepository, ISolicitacaoRepository solicitacaoRepository, ILogger<AlexaController> logger) : base(notificacoes)
+        public AlexaController(INotificationHandler<Notificacao> notificacoes, IMemoryCache cache, IUsuarioRepository usuarioRepository, ISolicitacaoRepository solicitacaoRepository) : base(notificacoes)
         {
             _cache = cache;
             _usuarioRepository = usuarioRepository;
             _solicitacaoRepository = solicitacaoRepository;
-            _logger = logger;
         }
 
         [HttpPost]

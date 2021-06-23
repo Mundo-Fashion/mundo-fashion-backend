@@ -13,6 +13,7 @@ namespace MundoFashion.WebApi.Models.Usuario
         public string Cpf { get; set; }
         public ServicoEstampaModel Servico { get; set; }
         public string DescricaoPessoal { get; set; }
+        public bool UtilizaSuporteAlexa { get; set; }
         public DateTime CreatedAt { get; set; }
     }
 }

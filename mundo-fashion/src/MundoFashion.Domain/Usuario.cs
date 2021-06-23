@@ -107,7 +107,7 @@ namespace MundoFashion.Domain
 
         public void AtualizarAvatar(string novoLinkAvatar)
         {
-            if (!AvatarLink.Equals(novoLinkAvatar) && !string.IsNullOrWhiteSpace(novoLinkAvatar))
+            if (!string.IsNullOrWhiteSpace(novoLinkAvatar))
                 AvatarLink = novoLinkAvatar;
         }
     }
