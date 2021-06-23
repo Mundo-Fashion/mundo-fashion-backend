@@ -25,6 +25,24 @@ namespace MundoFashion.WebApi.Controllers
             _solicitacaoRepository = solicitacaoRepository;
         }
 
+
+        [HttpPut]
+        [Route("desvincular-alexa/{alexaUserId:string}")]
+        public async Task<ActionResult<string>> DesvincularAlexa(string alexaUserId)
+        {
+            if (string.IsNullOrWhiteSpace(alexaUserId))
+                return BadRequest("As informações enviadas não podem ser vazia, verifique o código e tente novamente.");
+
+            Usuario usuario = await _usuarioRepository.ObterUsuarioPorAlexaUserId(alexaUserId).ConfigureAwait(false);
+
+            usuario.DesativarSuporteAlexa();
+
+            _usuarioRepository.AtualizarUsuario(usuario);
+            await _usuarioRepository.Commit().ConfigureAwait(false);
+
+            return RespostaCustomizada("Alexa desvinculada.");
+        }
+
         [HttpPost]
         [Route("registrar-alexa")]
         public async Task<ActionResult<string>> RegistrarAlexa(string alexaUserId, string passcode)
@@ -53,7 +71,6 @@ namespace MundoFashion.WebApi.Controllers
 
             _cache.Remove(passcode);
             return BadRequest("Alexa já cadastrada.");
-
         }
 
         [HttpGet]

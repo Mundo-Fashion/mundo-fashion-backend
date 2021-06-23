@@ -17,8 +17,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MundoFashion.Application", 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MundoFashion.Infrastructure.Storage", "src\MundoFashion.Infrastructure.Storage\MundoFashion.Infrastructure.Storage.csproj", "{64CB170B-1A02-4DAF-8AD6-E9333CAE7FE9}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{AE8E5E00-85E0-4BC4-8F65-9F9AE13FA356}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{E587745F-B862-498A-91DD-27D8BB994ADC}"
 EndProject
 Global
