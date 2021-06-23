@@ -8,7 +8,7 @@ namespace MundoFashion.Domain
 {
     public class Usuario : Entity, IAggregateRoot
     {
-        public string AvatarLink { get; private set; } 
+        public string AvatarLink { get; private set; }
         public string Nome { get; private set; }
         public string Email { get; private set; }
         public string Senha { get; private set; }
@@ -74,7 +74,8 @@ namespace MundoFashion.Domain
             Servico.AtualizarTipoRapport(servico.TipoRapport);
             Servico.AtualizarDescricao(servico.Descricao);
 
-            Servico.RemoverImagens();
+            if (servico.Imagens?.Length > 0)
+                Servico.RemoverImagens();
 
             foreach (var item in servico.Imagens)
                 Servico.AdicionarImagem(item);
