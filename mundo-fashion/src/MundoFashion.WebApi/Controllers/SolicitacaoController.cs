@@ -2,6 +2,7 @@
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using MundoFashion.Application.Services;
 using MundoFashion.Core.Notifications;
 using MundoFashion.Core.Storage;
@@ -9,11 +10,10 @@ using MundoFashion.Domain;
 using MundoFashion.Domain.Repositories;
 using MundoFashion.WebApi.Controllers.Base;
 using MundoFashion.WebApi.Models;
-using MundoFashion.WebApi.Models.Solicitacao;
 using MundoFashion.WebApi.Models.Mensagem;
+using MundoFashion.WebApi.Models.Solicitacao;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace MundoFashion.WebApi.Controllers
@@ -25,12 +25,14 @@ namespace MundoFashion.WebApi.Controllers
         private readonly SolicitacaoServices _solicitacaoServices;
         private readonly ICloudStorage _cloudStorage;
         private readonly IMapper _mapper;
-        public SolicitacaoController(INotificationHandler<Notificacao> notificacoes, IMapper mapper, SolicitacaoServices solicitacaoServices, ISolicitacaoRepository solicitacaoRepository, ICloudStorage cloudStorage) : base(notificacoes)
+        private readonly ILogger<SolicitacaoController> _logger;
+        public SolicitacaoController(INotificationHandler<Notificacao> notificacoes, IMapper mapper, SolicitacaoServices solicitacaoServices, ISolicitacaoRepository solicitacaoRepository, ICloudStorage cloudStorage, ILogger<SolicitacaoController> logger) : base(notificacoes)
         {
             _mapper = mapper;
             _solicitacaoServices = solicitacaoServices;
             _solicitacaoRepository = solicitacaoRepository;
             _cloudStorage = cloudStorage;
+            _logger = logger;
         }
 
         [HttpGet]
@@ -54,10 +56,18 @@ namespace MundoFashion.WebApi.Controllers
 
             Solicitacao novaSolicitacao = new Solicitacao(solicitacao.TomadorServicoId, solicitacao.ServicoId, detalhesSolicitacao);
 
+            _logger.LogInformation($"Quantidade imagens: {solicitacao.Detalhes.ImagensUpload.Count}");
+
             foreach (Microsoft.AspNetCore.Http.IFormFile imagem in solicitacao.Detalhes.ImagensUpload)
             {
                 string nomeImagem = $"{Guid.NewGuid()}_{imagem.FileName}";
-                novaSolicitacao.Detalhes.AdicionarImagem(await _cloudStorage.UploadFileAsync(imagem, nomeImagem).ConfigureAwait(false));
+
+                _logger.LogInformation("Vai salvar a imagem");
+                var imagemUrl = await _cloudStorage.UploadFileAsync(imagem, nomeImagem).ConfigureAwait(false);
+
+                _logger.LogInformation($"Imagem url: {imagemUrl}");
+                _logger.LogInformation("Vai setar na solicitação");
+                novaSolicitacao.Detalhes.AdicionarImagem(imagemUrl);
             }
 
             await _solicitacaoServices.AdicionarSolicitacao(novaSolicitacao, detalhesSolicitacao).ConfigureAwait(false);
