@@ -75,6 +75,7 @@ namespace MundoFashion.Domain
             Servico.AtualizarDescricao(servico.Descricao);
 
             Servico.RemoverImagens();
+
             foreach (var item in servico.Imagens)
                 Servico.AdicionarImagem(item);
         }

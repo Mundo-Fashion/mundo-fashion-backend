@@ -14,6 +14,7 @@ namespace MundoFashion.Domain.Servicos
         public Servico()
         {
             _imagens = new List<string>();
+            Imagens = _imagens.ToArray();
         }
         internal void AssociarUsuarioPrestador(Guid id)
            => PrestadorId = id;
