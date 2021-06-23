@@ -54,21 +54,16 @@ namespace MundoFashion.WebApi.Controllers
                                                                               solicitacao.Detalhes.TipoTecnicaEstamparia, solicitacao.Detalhes.TipoNicho,
                                                                               solicitacao.Detalhes.TipoRapport, solicitacao.Detalhes.Observacoes);
 
-            Solicitacao novaSolicitacao = new Solicitacao(solicitacao.TomadorServicoId, solicitacao.ServicoId, detalhesSolicitacao);
 
             _logger.LogInformation($"Quantidade imagens: {solicitacao.Detalhes.ImagensUpload.Count}");
 
             foreach (Microsoft.AspNetCore.Http.IFormFile imagem in solicitacao.Detalhes.ImagensUpload)
             {
                 string nomeImagem = $"{Guid.NewGuid()}_{imagem.FileName}";
-
-                _logger.LogInformation("Vai salvar a imagem");
-                var imagemUrl = await _cloudStorage.UploadFileAsync(imagem, nomeImagem).ConfigureAwait(false);
-
-                _logger.LogInformation($"Imagem url: {imagemUrl}");
-                _logger.LogInformation("Vai setar na solicitação");
-                novaSolicitacao.Detalhes.AdicionarImagem(imagemUrl);
+                detalhesSolicitacao.AdicionarImagem(await _cloudStorage.UploadFileAsync(imagem, nomeImagem).ConfigureAwait(false));
             }
+
+            Solicitacao novaSolicitacao = new Solicitacao(solicitacao.TomadorServicoId, solicitacao.ServicoId, detalhesSolicitacao);
 
             await _solicitacaoServices.AdicionarSolicitacao(novaSolicitacao, detalhesSolicitacao).ConfigureAwait(false);
 
