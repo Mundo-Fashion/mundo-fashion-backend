@@ -7,7 +7,7 @@ namespace MundoFashion.Domain
 {
     public class DetalhesSolicitacao : Entity
     {
-        private readonly List<string> _imagens;
+        private readonly List<string> _imagens = new List<string>();
 
         private DetalhesSolicitacao() { }
 
@@ -34,8 +34,6 @@ namespace MundoFashion.Domain
             Nicho = nicho;
             TipoRapport = tipoRapport;
             Observacoes = observacoes;
-
-            _imagens = new List<string>();
         }
 
         public string[] Imagens { get; private set; }
