@@ -18,7 +18,7 @@ namespace MundoFashion.Core.Enums.Servicos.Estampa
         Foil = 8,
         [Description(nameof(Gliter))]
         Gliter = 16,
-        [Description("Bilha no escuro")]
+        [Description("Brilha no escuro")]
         BilhaEscuro = 32
     }
 }
